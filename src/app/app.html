@@ -1,0 +1,518 @@
+<main>
+  <div class="topbar">
+    <div class="shell">
+      <div class="livePill"><span></span> Offerte aggiornate ogni giorno</div>
+      <div class="topLinks">
+        <a href="#assistenza">Assistenza</a>
+        <a href="#pagamenti">Pagamenti sicuri</a>
+        <a href="mailto:info@ekobit.it">Contatti</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="shell headerMain">
+      <button
+        class="mobileMenu"
+        type="button"
+        aria-label="Apri il menu"
+        [attr.aria-expanded]="menuOpen()"
+        (click)="menuOpen.set(true)"
+      >
+        <svg lucideMenu [size]="24"></svg>
+      </button>
+
+      <a class="logo" href="/" aria-label="Ekobit, homepage">
+        <img src="/brand/ekobit-logo.png" alt="Ekobit" width="349" height="226" />
+      </a>
+
+      <div
+        class="searchArea"
+        (focusin)="searchOpen.set(true)"
+        (focusout)="closeSearchIfOutside($event)"
+      >
+        <form class="search" role="search" (submit)="submitSearch($event)">
+          <label class="sr-only" for="site-search">Cerca nel catalogo</label>
+          <input
+            id="site-search"
+            type="search"
+            placeholder="Cerca marca, prodotto o categoria..."
+            autocomplete="off"
+            [ngModel]="query()"
+            (ngModelChange)="query.set($event)"
+            name="search"
+          />
+          <button type="submit" aria-label="Cerca">
+            <svg lucideSearch [size]="21"></svg>
+          </button>
+        </form>
+
+        @if (searchOpen()) {
+          <div class="searchPanel">
+            @if (normalizedQuery()) {
+              @if (searchMatches().length) {
+                <p>Risultati rapidi</p>
+                @for (product of searchMatches(); track product.id) {
+                  <button type="button" (click)="chooseSearchResult(product.id)">
+                    <span class="searchThumb">
+                      <img [src]="product.image" alt="" width="54" height="54" />
+                    </span>
+                    <span>
+                      <small>{{ product.brand }}</small>
+                      {{ product.name }}
+                    </span>
+                    <strong>{{ formatCurrency(product.price) }}</strong>
+                  </button>
+                }
+              } @else {
+                <div class="noResults">
+                  <svg lucideSearch [size]="24"></svg>
+                  Nessun risultato per “{{ query() }}”
+                </div>
+              }
+            } @else {
+              <div class="popularSearches">
+                <p>Ricerche popolari</p>
+                @for (term of ["Lavatrice", "Dyson", "Forno a vapore", "Frigorifero"]; track term) {
+                  <button type="button" (click)="query.set(term)">{{ term }}</button>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <nav class="actions" aria-label="Azioni account">
+        <a href="#account" aria-label="Il mio account">
+          <svg lucideCircleUserRound [size]="25"></svg>
+          <span>Account</span>
+        </a>
+        <button
+          type="button"
+          [attr.aria-label]="'Preferiti: ' + wishlist().size"
+          (click)="toast.set(wishlist().size + ' prodotti nei preferiti')"
+        >
+          <svg lucideHeart [size]="25"></svg>
+          <span>Preferiti</span>
+          @if (wishlist().size) { <b>{{ wishlist().size }}</b> }
+        </button>
+        <button
+          type="button"
+          class="cart"
+          [attr.aria-label]="'Carrello: ' + cartCount() + ' prodotti'"
+          (click)="cartOpen.set(true)"
+        >
+          <svg lucideShoppingBag [size]="25"></svg>
+          <span>Carrello</span>
+          <b>{{ cartCount() }}</b>
+        </button>
+      </nav>
+    </div>
+
+    <div class="navbar">
+      <div class="shell navInner">
+        <button class="categoryButton" type="button" (click)="menuOpen.set(true)">
+          <svg lucideMenu [size]="19"></svg>
+          Tutte le categorie
+          <svg lucideChevronDown [size]="16"></svg>
+        </button>
+        <nav class="mainNav" aria-label="Navigazione principale">
+          <a href="#prodotti">Negozio</a>
+          <a href="#prodotti">Nuovi arrivi</a>
+          <a href="#offerte">Offerte</a>
+          <a href="#categorie">Categorie</a>
+          <a href="#chi-siamo">Chi siamo</a>
+        </nav>
+        <a class="phone" href="mailto:info@ekobit.it">
+          <svg lucideHeadphones [size]="21"></svg>
+          <span>Hai bisogno di aiuto?<strong>Parla con noi</strong></span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="shell hero" aria-label="Promozioni">
+    <div
+      class="heroImage"
+      (pointerenter)="carouselPaused.set(true)"
+      (pointerleave)="carouselPaused.set(false)"
+    >
+      @for (slide of heroSlides; track slide.image; let index = $index) {
+        <div
+          class="heroSlide"
+          [class.heroSlideActive]="activeSlide() === index"
+          [attr.aria-hidden]="activeSlide() !== index"
+        >
+          <img
+            [src]="slide.image"
+            [alt]="activeSlide() === index ? slide.alt : ''"
+            width="1200"
+            height="500"
+            [attr.fetchpriority]="index === 0 ? 'high' : null"
+          />
+          <span>{{ slide.label }}</span>
+        </div>
+      }
+      <div class="heroArrows">
+        <button type="button" aria-label="Slide precedente" (click)="changeSlide(-1)">
+          <svg lucideArrowLeft [size]="19"></svg>
+        </button>
+        <button type="button" aria-label="Slide successiva" (click)="changeSlide(1)">
+          <svg lucideArrowRight [size]="19"></svg>
+        </button>
+      </div>
+      <div class="heroDots" aria-label="Seleziona promozione">
+        @for (slide of heroSlides; track slide.image; let index = $index) {
+          <button
+            type="button"
+            [attr.aria-label]="'Vai alla promozione ' + (index + 1)"
+            [attr.aria-current]="activeSlide() === index ? 'true' : null"
+            (click)="activeSlide.set(index)"
+          ></button>
+        }
+      </div>
+    </div>
+
+    <aside class="heroAside" #heroAside (pointermove)="moveHeroGlow($event, heroAside)">
+      <div class="heroAsideContent">
+        <p class="eyebrow">La scelta di casa</p>
+        <h1>Tecnologia utile.<span> Scelta umana.</span></h1>
+        <p>
+          Da oltre 20 anni aiutiamo le famiglie a trovare il prodotto giusto,
+          con assistenza prima e dopo l’acquisto.
+        </p>
+        <div class="heroButtons">
+          <a class="primaryButton" href="#prodotti">
+            Esplora il catalogo <svg lucideArrowRight [size]="18"></svg>
+          </a>
+          <button type="button" (click)="openFeaturedProduct()">
+            <svg lucideEye [size]="18"></svg> Scelta del momento
+          </button>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="shell benefits" aria-label="Vantaggi Ekobit">
+    <div>
+      <svg lucideTruck></svg>
+      <span><strong>Spedizioni rapide</strong>Consegne in tutta Italia</span>
+    </div>
+    <div>
+      <svg lucideShieldCheck></svg>
+      <span><strong>Pagamenti sicuri</strong>Acquista in tranquillità</span>
+    </div>
+    <div>
+      <svg lucideHeadphones></svg>
+      <span><strong>Assistenza dedicata</strong>Esperti al tuo fianco</span>
+    </div>
+  </section>
+
+  <section class="shell categorySection" id="categorie">
+    <div class="sectionHeading">
+      <div>
+        <p class="eyebrow">Navigazione intelligente</p>
+        <h2>Scegli il tuo mondo</h2>
+      </div>
+      <span class="dragHint">Seleziona per filtrare i prodotti</span>
+    </div>
+    <div class="categoryGrid">
+      <button
+        type="button"
+        class="categoryCard"
+        [class.categoryCardActive]="activeCategory() === 'Lavaggio'"
+        (click)="setCategory('Lavaggio', true)"
+      >
+        <span><svg lucideWashingMachine [size]="27" [strokeWidth]="1.7"></svg></span>
+        Lavaggio <svg class="categoryArrow" lucideArrowRight [size]="16"></svg>
+      </button>
+      <button
+        type="button"
+        class="categoryCard"
+        [class.categoryCardActive]="activeCategory() === 'Freddo'"
+        (click)="setCategory('Freddo', true)"
+      >
+        <span><svg lucideSnowflake [size]="27" [strokeWidth]="1.7"></svg></span>
+        Freddo <svg class="categoryArrow" lucideArrowRight [size]="16"></svg>
+      </button>
+      <button
+        type="button"
+        class="categoryCard"
+        [class.categoryCardActive]="activeCategory() === 'Cottura'"
+        (click)="setCategory('Cottura', true)"
+      >
+        <span><svg lucideWarehouse [size]="27" [strokeWidth]="1.7"></svg></span>
+        Cottura <svg class="categoryArrow" lucideArrowRight [size]="16"></svg>
+      </button>
+      <button
+        type="button"
+        class="categoryCard"
+        [class.categoryCardActive]="activeCategory() === 'Pulizia'"
+        (click)="setCategory('Pulizia', true)"
+      >
+        <span><svg lucideSparkles [size]="27" [strokeWidth]="1.7"></svg></span>
+        Pulizia <svg class="categoryArrow" lucideArrowRight [size]="16"></svg>
+      </button>
+      <button
+        type="button"
+        class="categoryCard"
+        [class.categoryCardActive]="activeCategory() === 'Piccoli elettrodomestici'"
+        (click)="setCategory('Piccoli elettrodomestici', true)"
+      >
+        <span><svg lucideTv [size]="27" [strokeWidth]="1.7"></svg></span>
+        Piccoli elettrodomestici
+        <svg class="categoryArrow" lucideArrowRight [size]="16"></svg>
+      </button>
+    </div>
+  </section>
+
+  <section class="shell productSection" id="prodotti">
+    <div class="sectionHeading">
+      <div>
+        <p class="eyebrow">Catalogo live</p>
+        <h2>{{ activeCategory() === "Tutti" ? "Ultimi arrivi" : activeCategory() }}</h2>
+      </div>
+      <span class="productCount">{{ visibleProducts().length }} prodotti</span>
+    </div>
+
+    <div class="filterBar" aria-label="Filtra per categoria">
+      @for (category of categories; track category) {
+        <button
+          type="button"
+          [class.filterActive]="activeCategory() === category"
+          (click)="setCategory(category)"
+        >
+          @if (activeCategory() === category) { <svg lucideCheck [size]="15"></svg> }
+          {{ category }}
+        </button>
+      }
+    </div>
+
+    <div class="productGrid">
+      @for (product of visibleProducts(); track product.id) {
+        <article class="productCard">
+          <div class="productMedia">
+            <span class="badge">{{ product.badge }}</span>
+            <button
+              type="button"
+              class="heartButton"
+              [class.liked]="isLiked(product.id)"
+              [attr.aria-label]="
+                (isLiked(product.id) ? 'Rimuovi ' : 'Aggiungi ') +
+                product.name +
+                ' dai preferiti'
+              "
+              [attr.aria-pressed]="isLiked(product.id)"
+              (click)="toggleWishlist(product)"
+            >
+              <svg
+                lucideHeart
+                [size]="19"
+                [attr.fill]="isLiked(product.id) ? 'currentColor' : 'none'"
+              ></svg>
+            </button>
+            <button
+              type="button"
+              class="quickViewButton"
+              (click)="quickProductId.set(product.id)"
+            >
+              <svg lucideEye [size]="17"></svg> Anteprima
+            </button>
+            <img [src]="product.image" [alt]="product.name" width="400" height="400" loading="lazy" />
+          </div>
+          <div class="productInfo">
+            <p>{{ product.brand }}</p>
+            <h3>{{ product.name }}</h3>
+            <div class="priceRow">
+              <strong>{{ formatCurrency(product.price) }}</strong>
+              <del>{{ formatCurrency(product.oldPrice) }}</del>
+            </div>
+            <button type="button" class="addButton" (click)="addToCart(product)">
+              <svg lucideShoppingBag [size]="18"></svg> Aggiungi al carrello
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="shell promo" id="offerte">
+    <img
+      src="/banners/lavatrici.png"
+      alt="Promozione su asciugatrici e lavatrici"
+      width="1200"
+      height="400"
+      loading="lazy"
+    />
+    <a href="#prodotti" aria-label="Scopri la promozione lavaggio">
+      Scopri l’offerta <svg lucideArrowRight [size]="18"></svg>
+    </a>
+  </section>
+
+  <div class="marquee" aria-label="Servizi Ekobit">
+    <div>
+      <span>20+ anni di esperienza</span><b>•</b><span>Assistenza reale</span><b>•</b>
+      <span>Marchi selezionati</span><b>•</b><span>Pagamenti protetti</span><b>•</b>
+      <span>20+ anni di esperienza</span><b>•</b><span>Assistenza reale</span><b>•</b>
+      <span>Marchi selezionati</span>
+    </div>
+  </div>
+
+  <div
+    class="scrim"
+    [class.scrimVisible]="overlayOpen()"
+    (click)="closeOverlays()"
+  ></div>
+
+  <aside
+    class="cartDrawer"
+    [class.drawerOpen]="cartOpen()"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Carrello"
+    [attr.aria-hidden]="!cartOpen()"
+  >
+    <div class="drawerHeader">
+      <div><p>Il tuo carrello</p><span>{{ cartCount() }} articoli</span></div>
+      <button type="button" aria-label="Chiudi carrello" (click)="cartOpen.set(false)">
+        <svg lucideX></svg>
+      </button>
+    </div>
+
+    <div class="cartLines">
+      @if (cartItems().length) {
+        @for (line of cartItems(); track line.product.id) {
+          <article>
+            <div class="cartImage">
+              <img [src]="line.product.image" alt="" width="84" height="96" />
+            </div>
+            <div>
+              <small>{{ line.product.brand }}</small>
+              <h3>{{ line.product.name }}</h3>
+              <strong>{{ formatCurrency(line.product.price) }}</strong>
+              <div class="quantity">
+                <button
+                  type="button"
+                  aria-label="Riduci quantità"
+                  (click)="updateQuantity(line.product.id, -1)"
+                >
+                  @if (line.quantity === 1) {
+                    <svg lucideTrash2 [size]="14"></svg>
+                  } @else {
+                    <svg lucideMinus [size]="14"></svg>
+                  }
+                </button>
+                <span>{{ line.quantity }}</span>
+                <button
+                  type="button"
+                  aria-label="Aumenta quantità"
+                  (click)="updateQuantity(line.product.id, 1)"
+                >
+                  <svg lucidePlus [size]="14"></svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        }
+      } @else {
+        <div class="emptyCart">
+          <span><svg lucideShoppingBag [size]="30"></svg></span>
+          <h3>Il carrello è pronto</h3>
+          <p>Aggiungi un prodotto e lo vedrai comparire qui in tempo reale.</p>
+          <button type="button" (click)="cartOpen.set(false)">Inizia lo shopping</button>
+        </div>
+      }
+    </div>
+
+    @if (cartItems().length) {
+      <div class="cartFooter">
+        <div><span>Totale</span><strong>{{ formatCurrency(cartTotal()) }}</strong></div>
+        <button type="button">Vai al checkout <svg lucideArrowRight [size]="18"></svg></button>
+        <p>Spedizione calcolata al checkout</p>
+      </div>
+    }
+  </aside>
+
+  <aside
+    class="mobilePanel"
+    [class.mobilePanelOpen]="menuOpen()"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Menu categorie"
+    [attr.aria-hidden]="!menuOpen()"
+  >
+    <div class="drawerHeader">
+      <img src="/brand/ekobit-logo.png" alt="Ekobit" width="118" height="76" />
+      <button type="button" aria-label="Chiudi menu" (click)="menuOpen.set(false)">
+        <svg lucideX></svg>
+      </button>
+    </div>
+    <p class="menuLabel">Esplora Ekobit</p>
+    <button type="button" (click)="setCategory('Lavaggio', true)">
+      <svg lucideWashingMachine [size]="21"></svg> Lavaggio
+      <svg lucideArrowRight [size]="17"></svg>
+    </button>
+    <button type="button" (click)="setCategory('Freddo', true)">
+      <svg lucideSnowflake [size]="21"></svg> Freddo
+      <svg lucideArrowRight [size]="17"></svg>
+    </button>
+    <button type="button" (click)="setCategory('Cottura', true)">
+      <svg lucideWarehouse [size]="21"></svg> Cottura
+      <svg lucideArrowRight [size]="17"></svg>
+    </button>
+    <button type="button" (click)="setCategory('Pulizia', true)">
+      <svg lucideSparkles [size]="21"></svg> Pulizia
+      <svg lucideArrowRight [size]="17"></svg>
+    </button>
+    <button type="button" (click)="setCategory('Piccoli elettrodomestici', true)">
+      <svg lucideTv [size]="21"></svg> Piccoli elettrodomestici
+      <svg lucideArrowRight [size]="17"></svg>
+    </button>
+    <a href="mailto:info@ekobit.it" class="menuContact">
+      <svg lucideHeadphones [size]="21"></svg>
+      <span>Serve un consiglio?<strong>Scrivici ora</strong></span>
+    </a>
+  </aside>
+
+  @if (quickProduct(); as product) {
+    <section
+      class="quickModal"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="'Anteprima ' + product.name"
+    >
+      <button
+        type="button"
+        class="modalClose"
+        aria-label="Chiudi anteprima"
+        (click)="quickProductId.set(null)"
+      >
+        <svg lucideX></svg>
+      </button>
+      <div class="modalImage">
+        <img [src]="product.image" [alt]="product.name" width="520" height="520" />
+      </div>
+      <div class="modalContent">
+        <p>{{ product.brand }}</p>
+        <h2>{{ product.name }}</h2>
+        <div class="modalPrice">
+          <strong>{{ formatCurrency(product.price) }}</strong>
+          <del>{{ formatCurrency(product.oldPrice) }}</del>
+        </div>
+        <p>{{ product.description }}</p>
+        <ul>
+          <li><svg lucideCheck [size]="16"></svg> Disponibile e pronto alla spedizione</li>
+          <li><svg lucideCheck [size]="16"></svg> Garanzia italiana</li>
+          <li><svg lucideCheck [size]="16"></svg> Assistenza Ekobit inclusa</li>
+        </ul>
+        <button type="button" class="modalAdd" (click)="addQuickProductToCart(product)">
+          <svg lucideShoppingBag [size]="19"></svg> Aggiungi al carrello
+        </button>
+      </div>
+    </section>
+  }
+
+  <div class="toast" [class.toastVisible]="toast()" aria-live="polite">
+    <svg lucideCheck [size]="17"></svg> {{ toast() }}
+  </div>
+</main>
