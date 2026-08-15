@@ -41,10 +41,12 @@ può contenere questi campi:
 | `description` | string | no |
 | `active` | boolean | no; `false` nasconde il prodotto |
 
-La Vercel Function `GET /api/products` restituisce fino a 60 prodotti validi.
-Se Firebase non è ancora configurato, la homepage mantiene automaticamente il
-catalogo demo. Per eseguire frontend e Function insieme in locale usa
-`vercel dev`; con `ng serve` il catalogo demo resta attivo.
+L'adapter Firestore è pronto in `server/firebase.ts`. Per sicurezza, la Vercel
+Function `GET /api/products` resta disattivata finché la service-account key
+condivisa durante lo sviluppo non viene revocata e sostituita: nel frattempo
+risponde con `FIREBASE_NOT_CONFIGURED` e la homepage mantiene automaticamente
+il catalogo demo. Dopo la rotazione si può riattivare il collegamento senza
+toccare il frontend Angular.
 
 ## Controlli
 
