@@ -1,0 +1,45 @@
+<main class="pageMain">
+  <section class="catalogHero">
+    <div class="shell">
+      <p class="eyebrow">Catalogo Ekobit</p>
+      <h1>{{ query() ? 'Risultati per “' + query() + '”' : (category() === 'Tutti' ? 'Tutti i prodotti' : category()) }}</h1>
+      <p>Prodotti selezionati, disponibilità aggiornata e assistenza prima e dopo l’acquisto.</p>
+    </div>
+  </section>
+
+  <section class="shell catalogLayout">
+    <div class="catalogToolbar">
+      <div class="filterBar" aria-label="Filtra per categoria">
+        @for (item of catalog.categories(); track item) {
+          <button type="button" [class.filterActive]="category() === item" (click)="setCategory(item)">
+            @if (category() === item) { <svg lucideCheck [size]="15"></svg> }
+            {{ item }}
+          </button>
+        }
+      </div>
+      <label class="sortControl">Ordina
+        <select [ngModel]="sort()" (ngModelChange)="setSort($event)">
+          <option value="featured">In evidenza</option>
+          <option value="price-asc">Prezzo crescente</option>
+          <option value="price-desc">Prezzo decrescente</option>
+          <option value="name">Nome</option>
+        </select>
+      </label>
+    </div>
+
+    @if (catalog.status() === 'loading') {
+      <div class="catalogNotice"><svg lucideRefreshCw [size]="18"></svg> Stiamo aggiornando il catalogo…</div>
+    } @else if (catalog.status() === 'fallback') {
+      <div class="catalogNotice catalogNoticeMuted">Catalogo demo attivo: la connessione verrà aggiornata automaticamente al prossimo caricamento.</div>
+    }
+
+    <div class="catalogSummary"><strong>{{ products().length }}</strong> prodotti trovati</div>
+    @if (products().length) {
+      <div class="productGrid catalogProductGrid">
+        @for (product of products(); track product.id) { <app-product-card [product]="product" /> }
+      </div>
+    } @else {
+      <div class="emptyResults"><span><svg lucideSearch [size]="32"></svg></span><h2>Nessun prodotto trovato</h2><p>Prova a cambiare categoria o a usare una ricerca più semplice.</p><button type="button" (click)="clearFilters()">Azzera i filtri</button></div>
+    }
+  </section>
+</main>

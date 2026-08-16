@@ -1,0 +1,67 @@
+<main>
+  <section class="shell hero" aria-label="Promozioni">
+    <div class="heroImage" (pointerenter)="carouselPaused.set(true)" (pointerleave)="carouselPaused.set(false)">
+      @for (slide of heroSlides; track slide.image; let index = $index) {
+        <div class="heroSlide" [class.heroSlideActive]="activeSlide() === index" [attr.aria-hidden]="activeSlide() !== index">
+          <img [src]="slide.image" [alt]="activeSlide() === index ? slide.alt : ''" width="1200" height="500" [attr.fetchpriority]="index === 0 ? 'high' : null" />
+          <span>{{ slide.label }}</span>
+        </div>
+      }
+      <div class="heroArrows">
+        <button type="button" aria-label="Slide precedente" (click)="changeSlide(-1)"><svg lucideArrowLeft [size]="19"></svg></button>
+        <button type="button" aria-label="Slide successiva" (click)="changeSlide(1)"><svg lucideArrowRight [size]="19"></svg></button>
+      </div>
+      <div class="heroDots" aria-label="Seleziona promozione">
+        @for (slide of heroSlides; track slide.image; let index = $index) {
+          <button type="button" [attr.aria-label]="'Vai alla promozione ' + (index + 1)" [attr.aria-current]="activeSlide() === index ? 'true' : null" (click)="activeSlide.set(index)"></button>
+        }
+      </div>
+    </div>
+
+    <aside class="heroAside" #heroAside (pointermove)="moveHeroGlow($event, heroAside)">
+      <div class="heroAsideContent">
+        <p class="eyebrow">La scelta di casa</p>
+        <h1>Tecnologia utile.<span> Scelta umana.</span></h1>
+        <p>Da oltre 20 anni aiutiamo le famiglie a trovare il prodotto giusto, con assistenza prima e dopo l’acquisto.</p>
+        <div class="heroButtons">
+          <a class="primaryButton" routerLink="/catalogo">Esplora il catalogo <svg lucideArrowRight [size]="18"></svg></a>
+          @if (catalog.featuredProducts()[0]; as product) {
+            <a class="secondaryButton" [routerLink]="['/prodotto', product.id]">Scelta del momento</a>
+          }
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="shell benefits" aria-label="Vantaggi Ekobit">
+    <div><svg lucideTruck></svg><span><strong>Spedizioni rapide</strong>Consegne in tutta Italia</span></div>
+    <div><svg lucideShieldCheck></svg><span><strong>Pagamenti sicuri</strong>Acquista in tranquillità</span></div>
+    <div><svg lucideHeadphones></svg><span><strong>Assistenza dedicata</strong>Esperti al tuo fianco</span></div>
+  </section>
+
+  <section class="shell categorySection">
+    <div class="sectionHeading"><div><p class="eyebrow">Navigazione intelligente</p><h2>Scegli il tuo mondo</h2></div><a routerLink="/catalogo">Vedi tutto il catalogo</a></div>
+    <div class="categoryGrid">
+      <a class="categoryCard" routerLink="/catalogo" [queryParams]="{ category: 'Lavaggio' }"><span><svg lucideWashingMachine [size]="27"></svg></span>Lavaggio<svg class="categoryArrow" lucideArrowRight [size]="16"></svg></a>
+      <a class="categoryCard" routerLink="/catalogo" [queryParams]="{ category: 'Freddo' }"><span><svg lucideSnowflake [size]="27"></svg></span>Freddo<svg class="categoryArrow" lucideArrowRight [size]="16"></svg></a>
+      <a class="categoryCard" routerLink="/catalogo" [queryParams]="{ category: 'Cottura' }"><span><svg lucideWarehouse [size]="27"></svg></span>Cottura<svg class="categoryArrow" lucideArrowRight [size]="16"></svg></a>
+      <a class="categoryCard" routerLink="/catalogo" [queryParams]="{ category: 'Pulizia' }"><span><svg lucideSparkles [size]="27"></svg></span>Pulizia<svg class="categoryArrow" lucideArrowRight [size]="16"></svg></a>
+      <a class="categoryCard" routerLink="/catalogo" [queryParams]="{ category: 'Piccoli elettrodomestici' }"><span><svg lucideTv [size]="27"></svg></span>Piccoli elettrodomestici<svg class="categoryArrow" lucideArrowRight [size]="16"></svg></a>
+    </div>
+  </section>
+
+  <section class="shell productSection">
+    <div class="sectionHeading"><div><p class="eyebrow">Catalogo live</p><h2>In evidenza</h2></div><a routerLink="/catalogo">Scopri tutti i prodotti</a></div>
+    @if (catalog.status() === 'loading') { <div class="catalogNotice">Aggiornamento catalogo…</div> }
+    <div class="productGrid">
+      @for (product of catalog.featuredProducts(); track product.id) { <app-product-card [product]="product" /> }
+    </div>
+  </section>
+
+  <section class="shell promo">
+    <img src="/banners/lavatrici.png" alt="Promozione su asciugatrici e lavatrici" width="1200" height="400" loading="lazy" />
+    <a routerLink="/catalogo" [queryParams]="{ category: 'Lavaggio', sale: 'true' }">Scopri l’offerta <svg lucideArrowRight [size]="18"></svg></a>
+  </section>
+
+  <div class="marquee" aria-label="Servizi Ekobit"><div><span>20+ anni di esperienza</span><b>•</b><span>Assistenza reale</span><b>•</b><span>Marchi selezionati</span><b>•</b><span>Pagamenti protetti</span><b>•</b><span>20+ anni di esperienza</span><b>•</b><span>Assistenza reale</span><b>•</b><span>Marchi selezionati</span></div></div>
+</main>

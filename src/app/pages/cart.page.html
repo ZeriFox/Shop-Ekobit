@@ -1,0 +1,27 @@
+<main class="pageMain">
+  <section class="shell pageHeading"><p class="eyebrow">Il tuo ordine</p><h1>Carrello</h1><p>{{ shop.cartCount() }} articoli selezionati</p></section>
+  <section class="shell cartPageLayout">
+    @if (shop.cartItems().length) {
+      <div class="cartPageLines">
+        @for (line of shop.cartItems(); track line.product.id) {
+          <article>
+            <a [routerLink]="['/prodotto', line.product.id]" class="cartPageImage"><img [src]="line.product.image" [alt]="line.product.name" width="150" height="150" /></a>
+            <div class="cartPageInfo"><small>{{ line.product.brand }}</small><h2><a [routerLink]="['/prodotto', line.product.id]">{{ line.product.name }}</a></h2><button type="button" (click)="shop.removeFromCart(line.product.id)"><svg lucideTrash2 [size]="15"></svg>Rimuovi</button></div>
+            <div class="quantity"><button type="button" aria-label="Riduci quantità" (click)="shop.updateQuantity(line.product.id, -1)"><svg lucideMinus [size]="14"></svg></button><span>{{ line.quantity }}</span><button type="button" aria-label="Aumenta quantità" (click)="shop.updateQuantity(line.product.id, 1)"><svg lucidePlus [size]="14"></svg></button></div>
+            <strong>{{ formatCurrency(line.product.price * line.quantity) }}</strong>
+          </article>
+        }
+        <a class="continueShopping" routerLink="/catalogo"><svg lucideArrowLeft [size]="17"></svg>Continua lo shopping</a>
+      </div>
+      <aside class="orderSummary">
+        <p class="eyebrow">Riepilogo</p><h2>Totale ordine</h2>
+        <dl><div><dt>Subtotale</dt><dd>{{ formatCurrency(shop.cartTotal()) }}</dd></div><div><dt>Spedizione</dt><dd>Calcolata dopo</dd></div></dl>
+        <div class="summaryTotal"><span>Totale</span><strong>{{ formatCurrency(shop.cartTotal()) }}</strong></div>
+        <button type="button" (click)="shop.showToast('Il checkout sarà il prossimo modulo ecommerce')">Procedi al checkout <svg lucideArrowRight [size]="18"></svg></button>
+        <div class="summaryBenefits"><span><svg lucideShieldCheck [size]="18"></svg>Pagamento protetto</span><span><svg lucideTruck [size]="18"></svg>Spedizione tracciata</span></div>
+      </aside>
+    } @else {
+      <div class="emptyResults cartEmpty"><span><svg lucideShoppingBag [size]="36"></svg></span><h2>Il carrello è vuoto</h2><p>Esplora il catalogo e aggiungi i prodotti che preferisci.</p><a class="primaryButton" routerLink="/catalogo">Vai al catalogo</a></div>
+    }
+  </section>
+</main>
