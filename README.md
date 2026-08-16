@@ -1,6 +1,7 @@
 # Shop Ekobit
 
-Frontend ecommerce in Angular e TypeScript, predisposto per Vercel e Firestore.
+Frontend ecommerce multipagina in Angular e TypeScript, con catalogo Firestore
+letto esclusivamente da una Vercel Function server-side.
 
 ## Sviluppo locale
 
@@ -22,9 +23,10 @@ FIREBASE_CLIENT_EMAIL=
 FIREBASE_PRIVATE_KEY=""
 ```
 
-Queste variabili non devono avere il prefisso `NEXT_PUBLIC_`. `.env.local` è
-ignorato da Git; su Vercel le stesse tre variabili vanno impostate nelle
-Environment Variables del progetto per Development, Preview e Production.
+Queste variabili non devono avere prefissi pubblici. `.env.local` è ignorato da
+Git; su Vercel le stesse tre variabili vanno impostate nelle Environment
+Variables del progetto. Per i Preview Deployment è preferibile un progetto
+Firebase separato da quello di produzione.
 
 La collection Firestore attesa è `products`. Ogni documento usa il proprio ID e
 può contenere questi campi:
@@ -39,14 +41,28 @@ può contenere questi campi:
 | `oldPrice` | number | no |
 | `badge` | string | no |
 | `description` | string | no |
+| `gallery` | string[] | no |
+| `features` | string[] | no |
+| `specifications` | map di stringhe | no |
+| `stock` | number | no |
+| `featured` | boolean | no |
 | `active` | boolean | no; `false` nasconde il prodotto |
 
-L'adapter Firestore è pronto in `server/firebase.ts`. Per sicurezza, la Vercel
-Function `GET /api/products` resta disattivata finché la service-account key
-condivisa durante lo sviluppo non viene revocata e sostituita: nel frattempo
-risponde con `FIREBASE_NOT_CONFIGURED` e la homepage mantiene automaticamente
-il catalogo demo. Dopo la rotazione si può riattivare il collegamento senza
-toccare il frontend Angular.
+La Function `GET /api/products` in `api/products.js` legge fino a 100 documenti
+attivi, valida i campi e restituisce il catalogo con una breve cache CDN. Se la
+Function non è raggiungibile durante lo sviluppo con `ng serve`, Angular usa il
+catalogo demo incluso. Per provare frontend e Function insieme usa `vercel dev`.
+
+## Routing
+
+- `/` — homepage
+- `/catalogo` — catalogo con ricerca, categoria, offerte e ordinamento
+- `/prodotto/:id` — pagina prodotto dinamica
+- `/carrello` — carrello persistente
+- `/chi-siamo` e `/assistenza` — pagine informative
+
+Le pagine sono caricate in lazy loading e condividono una sola istanza del
+catalogo, del carrello e dei preferiti.
 
 ## Controlli
 

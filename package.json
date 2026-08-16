@@ -7,7 +7,7 @@
     "dev": "ng serve",
     "start": "ng serve",
     "build": "ng build",
-    "check": "ng build --configuration development && tsc -p tsconfig.server.json",
+    "check": "ng build --configuration development && node --check api/products.js",
     "watch": "ng build --watch --configuration development"
   },
   "dependencies": {
