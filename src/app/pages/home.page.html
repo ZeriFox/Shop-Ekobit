@@ -11,7 +11,7 @@
       <div class="heroMetrics"><div><strong>20+</strong><span>{{ i18n.t('home.years') }}</span></div><div><strong>05</strong><span>{{ i18n.t('home.countries') }}</span></div><div><strong>1:1</strong><span>{{ i18n.t('home.human') }}</span></div></div>
     </div>
 
-    <div class="heroStage" aria-label="Ekobit product selection">
+    <div class="heroStage" aria-label="Ekobit product selection" (pointermove)="moveStage($event)" (pointerleave)="resetStage($event)">
       <div class="stageGrid"></div><div class="stageOrb orbOne"></div><div class="stageOrb orbTwo"></div>
       @if (catalog.featuredProducts()[0]; as product) {
         <a class="floatingProduct mainProduct" [routerLink]="i18n.route('product', product.id)"><span>{{ product.badge }}</span><img [src]="product.image" [alt]="product.name" width="460" height="460" /><div><small>{{ product.brand }}</small><strong>{{ product.name }}</strong><b>{{ i18n.currency(product.price) }}</b></div></a>
@@ -19,7 +19,7 @@
       @if (catalog.featuredProducts()[1]; as product) {
         <a class="floatingProduct miniProduct" [routerLink]="i18n.route('product', product.id)"><img [src]="product.image" [alt]="product.name" width="180" height="180" /><div><small>{{ product.brand }}</small><b>{{ i18n.currency(product.price) }}</b></div></a>
       }
-      <div class="stageLabel"><i></i>CURATED IN ITALY<br />MADE FOR EUROPE</div>
+      <div class="stageLabel"><i></i>SELECTED WITH CARE<br />SUPPORTED BY PEOPLE</div>
     </div>
   </section>
 
@@ -49,8 +49,8 @@
   </section>
 
   <section class="manifestoV2">
-    <div class="shell manifestoGrid"><div class="manifestoMark">E<span>K</span></div><div><p class="eyebrow">EKOBIT · EST. 2006</p><h2>{{ i18n.t('home.manifesto') }}</h2><p>{{ i18n.t('home.manifestoText') }}</p><a [routerLink]="i18n.route('about')">{{ i18n.t('home.story') }} <svg lucideArrowRight [size]="18"></svg></a></div></div>
+    <div class="shell manifestoGrid"><div class="manifestoMark"><img src="/brand/ekobit-mark-v2.svg" alt="" width="280" height="240" /></div><div><p class="eyebrow">EKOBIT · EST. 2006</p><h2>{{ i18n.t('home.manifesto') }}</h2><p>{{ i18n.t('home.manifestoText') }}</p><a [routerLink]="i18n.route('about')">{{ i18n.t('home.story') }} <svg lucideArrowRight [size]="18"></svg></a></div></div>
   </section>
 
-  <div class="marquee europeMarquee" aria-label="Ekobit Europe"><div><span>ITALIAN EXPERTISE</span><b>✦</b><span>EUROPEAN DELIVERY</span><b>✦</b><span>HUMAN SUPPORT</span><b>✦</b><span>CURATED TECHNOLOGY</span><b>✦</b><span>ITALIAN EXPERTISE</span><b>✦</b><span>EUROPEAN DELIVERY</span></div></div>
+  <div class="marquee europeMarquee" aria-label="Ekobit values"><div><span>SMART LIVING</span><b>✦</b><span>MADE SIMPLE</span><b>✦</b><span>HUMAN SUPPORT</span><b>✦</b><span>CURATED TECHNOLOGY</span><b>✦</b><span>SMART LIVING</span><b>✦</b><span>MADE SIMPLE</span></div></div>
 </main>

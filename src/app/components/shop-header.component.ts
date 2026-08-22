@@ -48,6 +48,8 @@ export class ShopHeaderComponent {
   readonly company = COMPANY;
   readonly query = signal("");
   readonly searchOpen = signal(false);
+  readonly scrolled = signal(false);
+  readonly scrollProgress = signal(0);
   readonly formatCurrency = (value: number) => this.i18n.currency(value);
   readonly normalizedQuery = computed(() => this.query().trim().toLocaleLowerCase(this.i18n.locale()));
   readonly searchMatches = computed(() => {
@@ -74,6 +76,14 @@ export class ShopHeaderComponent {
   closeOnEscape(): void {
     this.searchOpen.set(false);
     this.shop.closeOverlays();
+  }
+
+  @HostListener("window:scroll")
+  updateScrollState(): void {
+    const top = window.scrollY;
+    const available = document.documentElement.scrollHeight - window.innerHeight;
+    this.scrolled.set(top > 18);
+    this.scrollProgress.set(available > 0 ? Math.min(100, Math.max(0, (top / available) * 100)) : 0);
   }
 
   submitSearch(event: Event): void {
