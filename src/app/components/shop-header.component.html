@@ -14,10 +14,11 @@
   </div>
 </div>
 
-<header class="header europeHeader">
+<header class="header europeHeader" [class.headerScrolled]="scrolled()">
+  <div class="scrollProgress" aria-hidden="true"><span [style.width.%]="scrollProgress()"></span></div>
   <div class="shell headerMain">
     <button class="mobileMenu" type="button" [attr.aria-label]="i18n.t('nav.categories')" [attr.aria-expanded]="shop.menuOpen()" (click)="shop.menuOpen.set(true)"><svg lucideMenu [size]="24"></svg></button>
-    <a class="logo" [routerLink]="i18n.route('home')" aria-label="Ekobit, homepage"><img src="/brand/ekobit-logo.png" alt="Ekobit" width="349" height="226" /></a>
+    <a class="logo brandLogo" [routerLink]="i18n.route('home')" aria-label="Ekobit, homepage"><img src="/brand/ekobit-logo-v2.svg" alt="Ekobit" width="338" height="96" /></a>
 
     <nav class="mainNav desktopNav" aria-label="Main navigation">
       <a [routerLink]="i18n.route('home')" routerLinkActive="navActive" [routerLinkActiveOptions]="{ exact: true }">{{ i18n.t('nav.home') }}</a>
@@ -78,7 +79,7 @@
 </aside>
 
 <aside class="mobilePanel" [class.mobilePanelOpen]="shop.menuOpen()" role="dialog" aria-modal="true" [attr.aria-label]="i18n.t('nav.categories')" [attr.aria-hidden]="!shop.menuOpen()">
-  <div class="drawerHeader"><img src="/brand/ekobit-logo.png" alt="Ekobit" width="118" height="76" /><button type="button" aria-label="Close" (click)="shop.menuOpen.set(false)"><svg lucideX></svg></button></div>
+  <div class="drawerHeader"><img src="/brand/ekobit-logo-v2.svg" alt="Ekobit" width="146" height="42" /><button type="button" aria-label="Close" (click)="shop.menuOpen.set(false)"><svg lucideX></svg></button></div>
   <p class="menuLabel">{{ i18n.t('nav.categories') }}</p>
   @for (category of catalog.categories().slice(1); track category) { <button type="button" (click)="openCategory(category)"><span>{{ i18n.category(category) }}</span><svg lucideArrowRight [size]="17"></svg></button> }
   <div class="mobileMenuLinks"><a [routerLink]="i18n.route('about')">{{ i18n.t('nav.about') }}</a><a [routerLink]="i18n.route('contact')">{{ i18n.t('nav.contact') }}</a><a [routerLink]="i18n.route('support')">{{ i18n.t('nav.support') }}</a></div>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 96" role="img" aria-labelledby="title">
+  <title id="title">Ekobit</title>
+  <g fill="none" stroke="#276BFF" stroke-linecap="round" stroke-width="6">
+    <path d="M22 24C42 7 69 7 89 23"/>
+    <path d="M29 34C44 22 64 22 79 34" opacity=".72"/>
+    <path d="M21 71C40 89 68 91 90 76"/>
+    <path d="M30 62C45 76 65 77 80 66" opacity=".72"/>
+  </g>
+  <path fill="#A8F04A" d="M28 55C16 42 17 25 27 19c10-6 20 2 31 13 15 15 24 31 14 41-10 10-31-1-44-18Z"/>
+  <circle cx="85" cy="72" r="4" fill="#276BFF"/>
+</svg>

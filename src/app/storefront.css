@@ -732,7 +732,7 @@
   }
 }
 
-/* 2026 European storefront */
+/* 2026 Ekobit storefront */
 .europeTopbar {
   background: #071127;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -1055,6 +1055,174 @@
 
 @media (prefers-reduced-motion: reduce) {
   .orbOne, .orbTwo, .contactOrbit, .europeMarquee > div { animation: none !important; }
+}
+
+/* Ekobit motion system and responsive brand */
+.scrollProgress {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  z-index: 4;
+  height: 2px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scrollProgress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand-blue), var(--brand-green));
+  box-shadow: 0 0 14px rgba(47, 107, 255, .55);
+  transition: width 80ms linear;
+}
+
+.europeHeader {
+  transition: background-color 280ms ease, box-shadow 280ms ease, border-color 280ms ease;
+}
+
+.europeHeader.headerScrolled {
+  border-color: rgba(10, 23, 51, .06);
+  background: rgba(255, 255, 255, .82);
+  box-shadow: 0 14px 40px rgba(7, 21, 47, .09);
+}
+
+.europeHeader .headerMain { transition: min-height 280ms cubic-bezier(.2, .8, .2, 1); }
+.europeHeader.headerScrolled .headerMain { min-height: 70px; }
+.europeHeader .logo.brandLogo { width: 154px; flex-basis: 154px; overflow: visible; }
+.europeHeader .logo.brandLogo img { width: 154px; max-height: 48px; animation: logoArrival 720ms cubic-bezier(.2, .9, .2, 1) both; transition: transform 350ms cubic-bezier(.2, .8, .2, 1), filter 350ms ease; }
+.europeHeader .logo.brandLogo:hover img { filter: drop-shadow(0 8px 12px rgba(39, 107, 255, .17)); transform: translateY(-2px) scale(1.025); }
+
+.desktopNav a { transition: color 200ms ease, transform 200ms ease; }
+.desktopNav a:hover { color: var(--brand-blue); transform: translateY(-1px); }
+.desktopNav a::after { box-shadow: 0 0 12px rgba(47, 107, 255, .34); }
+.europeHeader .actions button { transition: color 200ms ease, background-color 200ms ease, transform 200ms cubic-bezier(.2, .8, .2, 1); }
+.europeHeader .actions button:hover { transform: translateY(-2px) scale(1.05); }
+.europeHeader .actions button:active { transform: scale(.94); }
+.europeTopbar .topLinks a { transition: color 180ms ease; }
+.europeTopbar .topLinks a:hover { color: var(--brand-green); }
+
+router-outlet + * { display: block; animation: pageArrival 520ms cubic-bezier(.2, .8, .2, 1) both; }
+.heroCopyV2 > * { animation: riseIn 720ms cubic-bezier(.2, .8, .2, 1) both; }
+.heroCopyV2 > :nth-child(1) { animation-delay: 60ms; }
+.heroCopyV2 > :nth-child(2) { animation-delay: 130ms; }
+.heroCopyV2 > :nth-child(3) { animation-delay: 210ms; }
+.heroCopyV2 > :nth-child(4) { animation-delay: 290ms; }
+.heroCopyV2 > :nth-child(5) { animation-delay: 370ms; }
+
+.heroStage {
+  --stage-x: 0;
+  --stage-y: 0;
+  animation: stageArrival 900ms 120ms cubic-bezier(.16, 1, .3, 1) both;
+}
+.heroStage::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  z-index: -1;
+  background: radial-gradient(circle at calc(50% + var(--stage-x) * 18%) calc(50% + var(--stage-y) * 18%), rgba(185, 255, 102, .16), transparent 35%);
+  transition: background-position 180ms ease;
+  pointer-events: none;
+}
+.stageGrid { animation: gridDrift 16s linear infinite; transform: translate(calc(var(--stage-x) * -7px), calc(var(--stage-y) * -7px)); transition: transform 180ms ease-out; }
+.mainProduct { transform: perspective(1100px) rotateX(calc(var(--stage-y) * -2.5deg)) rotateY(calc(var(--stage-x) * 3deg)) translate(calc(var(--stage-x) * 7px), calc(var(--stage-y) * 7px)); transition: transform 220ms ease-out; }
+.miniProduct { transform: translate(calc(var(--stage-x) * -12px), calc(var(--stage-y) * -10px)); transition: transform 240ms ease-out, background-color 220ms ease, border-color 220ms ease; }
+.miniProduct:hover { border-color: rgba(185, 255, 102, .5); background: rgba(255,255,255,.16); }
+.stageLabel i { animation: livePulse 2s ease-in-out infinite; }
+
+.primaryButton, .mapCopy a, .emptyCart a, .cartFooter a {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.primaryButton::before, .mapCopy a::before, .emptyCart a::before, .cartFooter a::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,.32) 50%, transparent 65%);
+  transform: translateX(-130%);
+  transition: transform 650ms cubic-bezier(.2, .8, .2, 1);
+}
+.primaryButton:hover::before, .mapCopy a:hover::before, .emptyCart a:hover::before, .cartFooter a:hover::before { transform: translateX(130%); }
+
+.serviceRail article { transition: background-color 220ms ease, transform 220ms ease; }
+.serviceRail article:hover { z-index: 1; background: #f2f6ff; transform: translateY(-3px); }
+.serviceRail article svg { transition: transform 300ms cubic-bezier(.2, .8, .2, 1), color 220ms ease; }
+.serviceRail article:hover svg { color: #77bf29; transform: rotate(-7deg) scale(1.12); }
+
+.categoryGridV2 a { transform-style: preserve-3d; }
+.categoryGridV2 a:hover svg { animation: iconBounce 520ms cubic-bezier(.2, .8, .2, 1); }
+.categoryGridV2 a i { transition: transform 250ms ease; }
+.categoryGridV2 a:hover i { transform: translateX(5px); }
+.sectionHeadingV2 > a svg, .manifestoGrid a svg, .businessCard a svg { transition: transform 220ms ease; }
+.sectionHeadingV2 > a:hover svg, .manifestoGrid a:hover svg, .businessCard a:hover svg { transform: translateX(5px); }
+
+.productCard { transition: transform 330ms cubic-bezier(.2, .8, .2, 1), box-shadow 330ms ease, border-color 330ms ease; }
+.productCard:hover { border-color: rgba(47, 107, 255, .18); box-shadow: 0 24px 58px rgba(15, 34, 71, .13); transform: translateY(-8px); }
+.productCard img { transition: transform 500ms cubic-bezier(.2, .8, .2, 1), filter 350ms ease; }
+.productCard:hover img { filter: drop-shadow(0 16px 18px rgba(10, 23, 51, .12)); transform: scale(1.055) rotate(-1deg); }
+
+.manifestoV2 { position: relative; overflow: hidden; }
+.manifestoV2::before { content: ""; position: absolute; top: -45%; left: -10%; width: 58vw; aspect-ratio: 1; border: 1px solid rgba(185,255,102,.12); border-radius: 50%; box-shadow: 0 0 0 90px rgba(47,107,255,.035), 0 0 0 180px rgba(47,107,255,.025); animation: slowSpin 28s linear infinite; }
+.manifestoMark { display: grid; place-items: center; opacity: 1; }
+.manifestoMark img { width: min(100%, 330px); height: auto; filter: drop-shadow(0 30px 45px rgba(0,0,0,.28)); animation: markFloat 6s ease-in-out infinite; }
+.footerLogo { display: inline-flex; transition: transform 250ms ease; }
+.footerLogo:hover { transform: translateY(-3px); }
+.europeFooter .footerBrand img { width: 174px; height: auto; padding: 0; border-radius: 0; background: transparent; }
+.footerColumns a, .footerColumns button { position: relative; transition: color 180ms ease, transform 180ms ease; }
+.footerColumns a:hover, .footerColumns button:hover { transform: translateX(4px); }
+
+.contactCards > *, .supportGrid > *, .paymentCards span, .legalIndex a, .businessCard { transition: transform 240ms ease, box-shadow 240ms ease, background-color 240ms ease; }
+.contactCards > *:hover, .supportGrid > *:hover, .paymentCards span:hover { z-index: 1; transform: translateY(-4px); box-shadow: 0 16px 32px rgba(10,23,51,.1); }
+.legalIndex a:hover { background: #edf2ff; color: var(--brand-blue); transform: translateX(3px); }
+.mapConsent button { transition: color 200ms ease, background-color 200ms ease, transform 200ms ease; }
+.mapConsent button:hover { background: var(--brand-green); color: #071127; transform: translateY(-2px); }
+
+@supports (animation-timeline: view()) {
+  .serviceRail,
+  .sectionHeadingV2,
+  .categoryGridV2,
+  .productGridV2,
+  .manifestoGrid,
+  .contactCards,
+  .mapSection,
+  .businessCard,
+  .legalContent > section,
+  .supportGrid,
+  .paymentSection {
+    animation: sectionReveal linear both;
+    animation-timeline: view();
+    animation-range: entry 4% cover 23%;
+  }
+}
+
+@keyframes logoArrival { from { opacity: 0; transform: translateX(-14px) scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes pageArrival { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes riseIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes stageArrival { from { opacity: 0; transform: translateX(35px) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes gridDrift { to { background-position: 46px 46px; } }
+@keyframes iconBounce { 40% { transform: translateY(-8px) rotate(-6deg); } 75% { transform: translateY(2px) rotate(2deg); } }
+@keyframes markFloat { 50% { transform: translateY(-14px) rotate(2deg) scale(1.02); } }
+@keyframes sectionReveal { from { opacity: .2; transform: translateY(38px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 650px) {
+  .europeHeader .logo.brandLogo, .europeHeader .logo.brandLogo img { width: 116px; }
+  .europeHeader .logo.brandLogo { flex-basis: 116px; }
+  .europeHeader.headerScrolled .headerMain { min-height: 62px; }
+  .manifestoMark img { width: 155px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .mainProduct, .miniProduct, .stageGrid { transform: none !important; }
 }
 
 /* Interactive storefront */
