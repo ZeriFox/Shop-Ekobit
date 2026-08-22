@@ -1,6 +1,7 @@
 let database;
 
 const REQUIRED_ENV = ["FIREBASE_PROJECT_ID", "FIREBASE_CLIENT_EMAIL", "FIREBASE_PRIVATE_KEY"];
+const DEFAULT_DATABASE_ID = "shop";
 
 function text(value, fallback = "") {
   return typeof value === "string" ? value.trim() : fallback;
@@ -33,11 +34,12 @@ function getDatabase() {
   const projectId = process.env.FIREBASE_PROJECT_ID.trim();
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL.trim();
   const privateKey = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n");
+  const databaseId = process.env.FIREBASE_DATABASE_ID?.trim() || DEFAULT_DATABASE_ID;
   const app = getApps().length
     ? getApp()
     : initializeApp({ credential: cert({ projectId, clientEmail, privateKey }), projectId });
 
-  database = getFirestore(app);
+  database = getFirestore(app, databaseId);
   return database;
 }
 
