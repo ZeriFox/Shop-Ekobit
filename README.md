@@ -21,12 +21,14 @@ inserisci una service-account key valida e non condivisa:
 FIREBASE_PROJECT_ID=
 FIREBASE_CLIENT_EMAIL=
 FIREBASE_PRIVATE_KEY=""
+FIREBASE_DATABASE_ID=shop
 ```
 
 Queste variabili non devono avere prefissi pubblici. `.env.local` è ignorato da
-Git; su Vercel le stesse tre variabili vanno impostate nelle Environment
-Variables del progetto. Per i Preview Deployment è preferibile un progetto
-Firebase separato da quello di produzione.
+Git; su Vercel le credenziali vanno impostate nelle Environment Variables del
+progetto. `FIREBASE_DATABASE_ID` è opzionale e usa `shop` come valore
+predefinito. Per i Preview Deployment è preferibile un progetto Firebase
+separato da quello di produzione.
 
 La collection Firestore attesa è `products`. Ogni documento usa il proprio ID e
 può contenere questi campi:
