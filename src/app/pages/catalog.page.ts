@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { LucideCheck, LucideRefreshCw, LucideSearch } from "@lucide/angular";
 import { ProductCardComponent } from "../components/product-card.component";
+import { I18nService } from "../i18n/i18n.service";
 import { CatalogService } from "../services/catalog.service";
 
 @Component({
@@ -15,6 +16,7 @@ export class CatalogPage {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   readonly catalog = inject(CatalogService);
+  readonly i18n = inject(I18nService);
   readonly category = signal("Tutti");
   readonly query = signal("");
   readonly saleOnly = signal(false);
@@ -22,10 +24,10 @@ export class CatalogPage {
 
   readonly products = computed(() => {
     const category = this.category();
-    const query = this.query().trim().toLocaleLowerCase("it");
+    const query = this.query().trim().toLocaleLowerCase(this.i18n.locale());
     let products = this.catalog.products().filter((product) => {
       const matchesCategory = category === "Tutti" || product.category === category;
-      const matchesQuery = !query || `${product.brand} ${product.name} ${product.category}`.toLocaleLowerCase("it").includes(query);
+      const matchesQuery = !query || `${product.brand} ${product.name} ${product.category}`.toLocaleLowerCase(this.i18n.locale()).includes(query);
       const matchesSale = !this.saleOnly() || product.oldPrice > product.price;
       return matchesCategory && matchesQuery && matchesSale;
     });
@@ -33,7 +35,7 @@ export class CatalogPage {
     products = [...products];
     if (this.sort() === "price-asc") products.sort((left, right) => left.price - right.price);
     if (this.sort() === "price-desc") products.sort((left, right) => right.price - left.price);
-    if (this.sort() === "name") products.sort((left, right) => left.name.localeCompare(right.name, "it"));
+    if (this.sort() === "name") products.sort((left, right) => left.name.localeCompare(right.name, this.i18n.locale()));
     if (this.sort() === "featured") products.sort((left, right) => Number(right.featured) - Number(left.featured));
     return products;
   });
@@ -64,6 +66,6 @@ export class CatalogPage {
   }
 
   clearFilters(): void {
-    void this.router.navigate(["/catalogo"]);
+    void this.router.navigate([this.i18n.route("catalog")]);
   }
 }

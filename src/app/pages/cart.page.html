@@ -1,27 +1,27 @@
 <main class="pageMain">
-  <section class="shell pageHeading"><p class="eyebrow">Il tuo ordine</p><h1>Carrello</h1><p>{{ shop.cartCount() }} articoli selezionati</p></section>
+  <section class="shell pageHeading"><p class="eyebrow">Ekobit Europe</p><h1>{{ i18n.t('nav.cart') }}</h1><p>{{ shop.cartCount() }} {{ i18n.t('cart.items') }}</p></section>
   <section class="shell cartPageLayout">
     @if (shop.cartItems().length) {
       <div class="cartPageLines">
         @for (line of shop.cartItems(); track line.product.id) {
           <article>
-            <a [routerLink]="['/prodotto', line.product.id]" class="cartPageImage"><img [src]="line.product.image" [alt]="line.product.name" width="150" height="150" /></a>
-            <div class="cartPageInfo"><small>{{ line.product.brand }}</small><h2><a [routerLink]="['/prodotto', line.product.id]">{{ line.product.name }}</a></h2><button type="button" (click)="shop.removeFromCart(line.product.id)"><svg lucideTrash2 [size]="15"></svg>Rimuovi</button></div>
+            <a [routerLink]="i18n.route('product', line.product.id)" class="cartPageImage"><img [src]="line.product.image" [alt]="line.product.name" width="150" height="150" /></a>
+            <div class="cartPageInfo"><small>{{ line.product.brand }}</small><h2><a [routerLink]="i18n.route('product', line.product.id)">{{ line.product.name }}</a></h2><button type="button" (click)="shop.removeFromCart(line.product.id)"><svg lucideTrash2 [size]="15"></svg>{{ i18n.t('common.remove') }}</button></div>
             <div class="quantity"><button type="button" aria-label="Riduci quantità" (click)="shop.updateQuantity(line.product.id, -1)"><svg lucideMinus [size]="14"></svg></button><span>{{ line.quantity }}</span><button type="button" aria-label="Aumenta quantità" (click)="shop.updateQuantity(line.product.id, 1)"><svg lucidePlus [size]="14"></svg></button></div>
             <strong>{{ formatCurrency(line.product.price * line.quantity) }}</strong>
           </article>
         }
-        <a class="continueShopping" routerLink="/catalogo"><svg lucideArrowLeft [size]="17"></svg>Continua lo shopping</a>
+        <a class="continueShopping" [routerLink]="i18n.route('catalog')"><svg lucideArrowLeft [size]="17"></svg>{{ i18n.t('common.continue') }}</a>
       </div>
       <aside class="orderSummary">
-        <p class="eyebrow">Riepilogo</p><h2>Totale ordine</h2>
-        <dl><div><dt>Subtotale</dt><dd>{{ formatCurrency(shop.cartTotal()) }}</dd></div><div><dt>Spedizione</dt><dd>Calcolata dopo</dd></div></dl>
-        <div class="summaryTotal"><span>Totale</span><strong>{{ formatCurrency(shop.cartTotal()) }}</strong></div>
-        <button type="button" (click)="shop.showToast('Il checkout sarà il prossimo modulo ecommerce')">Procedi al checkout <svg lucideArrowRight [size]="18"></svg></button>
-        <div class="summaryBenefits"><span><svg lucideShieldCheck [size]="18"></svg>Pagamento protetto</span><span><svg lucideTruck [size]="18"></svg>Spedizione tracciata</span></div>
+        <p class="eyebrow">Ekobit</p><h2>{{ i18n.t('cart.total') }}</h2>
+        <dl><div><dt>{{ i18n.t('common.subtotal') }}</dt><dd>{{ formatCurrency(shop.cartTotal()) }}</dd></div><div><dt>{{ i18n.t('page.shipping') }}</dt><dd>{{ i18n.t('common.calculated') }}</dd></div></dl>
+        <div class="summaryTotal"><span>{{ i18n.t('cart.total') }}</span><strong>{{ formatCurrency(shop.cartTotal()) }}</strong></div>
+        <button type="button" (click)="shop.showToast('Checkout · coming soon')">{{ i18n.t('common.checkout') }} <svg lucideArrowRight [size]="18"></svg></button>
+        <div class="summaryBenefits"><span><svg lucideShieldCheck [size]="18"></svg>{{ i18n.t('home.secure') }}</span><span><svg lucideTruck [size]="18"></svg>{{ i18n.t('product.fast') }}</span></div>
       </aside>
     } @else {
-      <div class="emptyResults cartEmpty"><span><svg lucideShoppingBag [size]="36"></svg></span><h2>Il carrello è vuoto</h2><p>Esplora il catalogo e aggiungi i prodotti che preferisci.</p><a class="primaryButton" routerLink="/catalogo">Vai al catalogo</a></div>
+      <div class="emptyResults cartEmpty"><span><svg lucideShoppingBag [size]="36"></svg></span><h2>{{ i18n.t('cart.emptyTitle') }}</h2><p>{{ i18n.t('cart.emptyText') }}</p><a class="primaryButton" [routerLink]="i18n.route('catalog')">{{ i18n.t('home.catalog') }}</a></div>
     }
   </section>
 </main>

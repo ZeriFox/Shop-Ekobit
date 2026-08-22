@@ -1,6 +1,7 @@
 import { DOCUMENT, isPlatformBrowser } from "@angular/common";
 import { Injectable, PLATFORM_ID, computed, effect, inject, signal } from "@angular/core";
 import type { CartLine, Product } from "../models/product";
+import { I18nService } from "../i18n/i18n.service";
 import { CatalogService } from "./catalog.service";
 
 const CART_KEY = "ekobit-cart-v1";
@@ -33,6 +34,7 @@ export class ShopStateService {
   private readonly catalog = inject(CatalogService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly document = inject(DOCUMENT);
+  private readonly i18n = inject(I18nService);
   private toastTimer: ReturnType<typeof setTimeout> | undefined;
 
   readonly cart = signal<CartLine[]>([]);
@@ -70,7 +72,7 @@ export class ShopStateService {
     const removing = next.has(product.id);
     if (removing) next.delete(product.id); else next.add(product.id);
     this.wishlist.set(next);
-    this.showToast(removing ? "Rimosso dai preferiti" : "Salvato nei preferiti");
+    this.showToast(`${this.i18n.t("nav.wishlist")} ${removing ? "−" : "+"}`);
   }
 
   addToCart(product: Product, openCart = false): void {
@@ -80,7 +82,7 @@ export class ShopStateService {
         ? current.map((line) => line.productId === product.id ? { ...line, quantity: line.quantity + 1 } : line)
         : [...current, { productId: product.id, quantity: 1 }];
     });
-    this.showToast(`${product.brand} aggiunto al carrello`);
+    this.showToast(`${product.brand} · ${this.i18n.t("product.add")}`);
     if (openCart) this.cartOpen.set(true);
   }
 

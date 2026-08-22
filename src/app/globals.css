@@ -31,13 +31,14 @@
 }
 
 :root {
-  --brand-blue: #2463a7;
-  --brand-blue-dark: #153f70;
-  --brand-green: #a8cf45;
-  --ink: #132238;
-  --muted: #68758a;
-  --line: #e5eaf0;
-  --soft: #f5f7fa;
+  --brand-blue: #2f6bff;
+  --brand-blue-dark: #0a1733;
+  --brand-green: #b9ff66;
+  --accent-coral: #ff7657;
+  --ink: #0a1733;
+  --muted: #657087;
+  --line: #dfe5ee;
+  --soft: #f2f5f9;
   --white: #ffffff;
 }
 
@@ -51,7 +52,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--white);
+  background: #f7f8fb;
   color: var(--ink);
   font-family: "Jost", Arial, sans-serif;
 }

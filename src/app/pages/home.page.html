@@ -1,67 +1,56 @@
-<main>
-  <section class="shell hero" aria-label="Promozioni">
-    <div class="heroImage" (pointerenter)="carouselPaused.set(true)" (pointerleave)="carouselPaused.set(false)">
-      @for (slide of heroSlides; track slide.image; let index = $index) {
-        <div class="heroSlide" [class.heroSlideActive]="activeSlide() === index" [attr.aria-hidden]="activeSlide() !== index">
-          <img [src]="slide.image" [alt]="activeSlide() === index ? slide.alt : ''" width="1200" height="500" [attr.fetchpriority]="index === 0 ? 'high' : null" />
-          <span>{{ slide.label }}</span>
-        </div>
+<main class="homeV2">
+  <section class="shell europeanHero">
+    <div class="heroCopyV2">
+      <div class="europeBadge"><svg lucideGlobe2 [size]="17"></svg>{{ i18n.t('home.kicker') }}<span>IT · EN · FR · DE · ES</span></div>
+      <h1>{{ i18n.t('home.titleA') }} <em>{{ i18n.t('home.titleB') }}</em></h1>
+      <p>{{ i18n.t('home.lead') }}</p>
+      <div class="heroButtonsV2">
+        <a class="primaryButton" [routerLink]="i18n.route('catalog')">{{ i18n.t('home.explore') }} <svg lucideArrowRight [size]="18"></svg></a>
+        <a class="textButton" [routerLink]="i18n.route('about')">{{ i18n.t('home.story') }}</a>
+      </div>
+      <div class="heroMetrics"><div><strong>20+</strong><span>{{ i18n.t('home.years') }}</span></div><div><strong>05</strong><span>{{ i18n.t('home.countries') }}</span></div><div><strong>1:1</strong><span>{{ i18n.t('home.human') }}</span></div></div>
+    </div>
+
+    <div class="heroStage" aria-label="Ekobit product selection">
+      <div class="stageGrid"></div><div class="stageOrb orbOne"></div><div class="stageOrb orbTwo"></div>
+      @if (catalog.featuredProducts()[0]; as product) {
+        <a class="floatingProduct mainProduct" [routerLink]="i18n.route('product', product.id)"><span>{{ product.badge }}</span><img [src]="product.image" [alt]="product.name" width="460" height="460" /><div><small>{{ product.brand }}</small><strong>{{ product.name }}</strong><b>{{ i18n.currency(product.price) }}</b></div></a>
       }
-      <div class="heroArrows">
-        <button type="button" aria-label="Slide precedente" (click)="changeSlide(-1)"><svg lucideArrowLeft [size]="19"></svg></button>
-        <button type="button" aria-label="Slide successiva" (click)="changeSlide(1)"><svg lucideArrowRight [size]="19"></svg></button>
-      </div>
-      <div class="heroDots" aria-label="Seleziona promozione">
-        @for (slide of heroSlides; track slide.image; let index = $index) {
-          <button type="button" [attr.aria-label]="'Vai alla promozione ' + (index + 1)" [attr.aria-current]="activeSlide() === index ? 'true' : null" (click)="activeSlide.set(index)"></button>
-        }
-      </div>
-    </div>
-
-    <aside class="heroAside" #heroAside (pointermove)="moveHeroGlow($event, heroAside)">
-      <div class="heroAsideContent">
-        <p class="eyebrow">La scelta di casa</p>
-        <h1>Tecnologia utile.<span> Scelta umana.</span></h1>
-        <p>Da oltre 20 anni aiutiamo le famiglie a trovare il prodotto giusto, con assistenza prima e dopo l’acquisto.</p>
-        <div class="heroButtons">
-          <a class="primaryButton" routerLink="/catalogo">Esplora il catalogo <svg lucideArrowRight [size]="18"></svg></a>
-          @if (catalog.featuredProducts()[0]; as product) {
-            <a class="secondaryButton" [routerLink]="['/prodotto', product.id]">Scelta del momento</a>
-          }
-        </div>
-      </div>
-    </aside>
-  </section>
-
-  <section class="shell benefits" aria-label="Vantaggi Ekobit">
-    <div><svg lucideTruck></svg><span><strong>Spedizioni rapide</strong>Consegne in tutta Italia</span></div>
-    <div><svg lucideShieldCheck></svg><span><strong>Pagamenti sicuri</strong>Acquista in tranquillità</span></div>
-    <div><svg lucideHeadphones></svg><span><strong>Assistenza dedicata</strong>Esperti al tuo fianco</span></div>
-  </section>
-
-  <section class="shell categorySection">
-    <div class="sectionHeading"><div><p class="eyebrow">Navigazione intelligente</p><h2>Scegli il tuo mondo</h2></div><a routerLink="/catalogo">Vedi tutto il catalogo</a></div>
-    <div class="categoryGrid">
-      <a class="categoryCard" routerLink="/catalogo" [queryParams]="{ category: 'Lavaggio' }"><span><svg lucideWashingMachine [size]="27"></svg></span>Lavaggio<svg class="categoryArrow" lucideArrowRight [size]="16"></svg></a>
-      <a class="categoryCard" routerLink="/catalogo" [queryParams]="{ category: 'Freddo' }"><span><svg lucideSnowflake [size]="27"></svg></span>Freddo<svg class="categoryArrow" lucideArrowRight [size]="16"></svg></a>
-      <a class="categoryCard" routerLink="/catalogo" [queryParams]="{ category: 'Cottura' }"><span><svg lucideWarehouse [size]="27"></svg></span>Cottura<svg class="categoryArrow" lucideArrowRight [size]="16"></svg></a>
-      <a class="categoryCard" routerLink="/catalogo" [queryParams]="{ category: 'Pulizia' }"><span><svg lucideSparkles [size]="27"></svg></span>Pulizia<svg class="categoryArrow" lucideArrowRight [size]="16"></svg></a>
-      <a class="categoryCard" routerLink="/catalogo" [queryParams]="{ category: 'Piccoli elettrodomestici' }"><span><svg lucideTv [size]="27"></svg></span>Piccoli elettrodomestici<svg class="categoryArrow" lucideArrowRight [size]="16"></svg></a>
+      @if (catalog.featuredProducts()[1]; as product) {
+        <a class="floatingProduct miniProduct" [routerLink]="i18n.route('product', product.id)"><img [src]="product.image" [alt]="product.name" width="180" height="180" /><div><small>{{ product.brand }}</small><b>{{ i18n.currency(product.price) }}</b></div></a>
+      }
+      <div class="stageLabel"><i></i>CURATED IN ITALY<br />MADE FOR EUROPE</div>
     </div>
   </section>
 
-  <section class="shell productSection">
-    <div class="sectionHeading"><div><p class="eyebrow">Catalogo live</p><h2>In evidenza</h2></div><a routerLink="/catalogo">Scopri tutti i prodotti</a></div>
-    @if (catalog.status() === 'loading') { <div class="catalogNotice">Aggiornamento catalogo…</div> }
-    <div class="productGrid">
-      @for (product of catalog.featuredProducts(); track product.id) { <app-product-card [product]="product" /> }
+  <section class="shell serviceRail" aria-label="Ekobit services">
+    <article><svg lucideTruck></svg><div><strong>{{ i18n.t('home.delivery') }}</strong><span>{{ i18n.t('home.deliveryText') }}</span></div></article>
+    <article><svg lucideShieldCheck></svg><div><strong>{{ i18n.t('home.secure') }}</strong><span>{{ i18n.t('home.secureText') }}</span></div></article>
+    <article><svg lucideHeadphones></svg><div><strong>{{ i18n.t('home.support') }}</strong><span>{{ i18n.t('home.supportText') }}</span></div></article>
+    <article><svg lucideSparkles></svg><div><strong>{{ i18n.t('home.curated') }}</strong><span>{{ i18n.t('home.curatedText') }}</span></div></article>
+  </section>
+
+  <section class="shell homeSectionV2 categorySectionV2">
+    <div class="sectionHeadingV2"><div><p class="eyebrow">{{ i18n.t('home.categoriesKicker') }}</p><h2>{{ i18n.t('home.categories') }}</h2></div><a [routerLink]="i18n.route('catalog')">{{ i18n.t('home.all') }} <svg lucideArrowRight [size]="16"></svg></a></div>
+    <div class="categoryGridV2">
+      <a [routerLink]="i18n.route('catalog')" [queryParams]="{ category: 'Lavaggio' }"><span>01</span><svg lucideWashingMachine></svg><strong>{{ i18n.category('Lavaggio') }}</strong><i>→</i></a>
+      <a [routerLink]="i18n.route('catalog')" [queryParams]="{ category: 'Freddo' }"><span>02</span><svg lucideSnowflake></svg><strong>{{ i18n.category('Freddo') }}</strong><i>→</i></a>
+      <a [routerLink]="i18n.route('catalog')" [queryParams]="{ category: 'Cottura' }"><span>03</span><svg lucideWarehouse></svg><strong>{{ i18n.category('Cottura') }}</strong><i>→</i></a>
+      <a [routerLink]="i18n.route('catalog')" [queryParams]="{ category: 'Pulizia' }"><span>04</span><svg lucideSparkles></svg><strong>{{ i18n.category('Pulizia') }}</strong><i>→</i></a>
+      <a [routerLink]="i18n.route('catalog')" [queryParams]="{ category: 'Piccoli elettrodomestici' }"><span>05</span><svg lucideTv></svg><strong>{{ i18n.category('Piccoli elettrodomestici') }}</strong><i>→</i></a>
     </div>
   </section>
 
-  <section class="shell promo">
-    <img src="/banners/lavatrici.png" alt="Promozione su asciugatrici e lavatrici" width="1200" height="400" loading="lazy" />
-    <a routerLink="/catalogo" [queryParams]="{ category: 'Lavaggio', sale: 'true' }">Scopri l’offerta <svg lucideArrowRight [size]="18"></svg></a>
+  <section class="shell homeSectionV2 featuredV2">
+    <div class="sectionHeadingV2"><div><p class="eyebrow">{{ i18n.t('home.featuredKicker') }}</p><h2>{{ i18n.t('home.featured') }}</h2></div><a [routerLink]="i18n.route('catalog')">{{ i18n.t('home.catalog') }} <svg lucideArrowRight [size]="16"></svg></a></div>
+    @if (catalog.status() === 'loading') { <div class="catalogNotice">{{ i18n.t('catalog.updating') }}</div> }
+    @if (catalog.status() === 'demo' || catalog.status() === 'fallback') { <div class="demoNotice"><span>DEMO</span><div><strong>{{ i18n.t('home.demo') }}</strong><p>{{ i18n.t('home.demoText') }}</p></div></div> }
+    <div class="productGrid productGridV2">@for (product of catalog.featuredProducts(); track product.id) { <app-product-card [product]="product" /> }</div>
   </section>
 
-  <div class="marquee" aria-label="Servizi Ekobit"><div><span>20+ anni di esperienza</span><b>•</b><span>Assistenza reale</span><b>•</b><span>Marchi selezionati</span><b>•</b><span>Pagamenti protetti</span><b>•</b><span>20+ anni di esperienza</span><b>•</b><span>Assistenza reale</span><b>•</b><span>Marchi selezionati</span></div></div>
+  <section class="manifestoV2">
+    <div class="shell manifestoGrid"><div class="manifestoMark">E<span>K</span></div><div><p class="eyebrow">EKOBIT · EST. 2006</p><h2>{{ i18n.t('home.manifesto') }}</h2><p>{{ i18n.t('home.manifestoText') }}</p><a [routerLink]="i18n.route('about')">{{ i18n.t('home.story') }} <svg lucideArrowRight [size]="18"></svg></a></div></div>
+  </section>
+
+  <div class="marquee europeMarquee" aria-label="Ekobit Europe"><div><span>ITALIAN EXPERTISE</span><b>✦</b><span>EUROPEAN DELIVERY</span><b>✦</b><span>HUMAN SUPPORT</span><b>✦</b><span>CURATED TECHNOLOGY</span><b>✦</b><span>ITALIAN EXPERTISE</span><b>✦</b><span>EUROPEAN DELIVERY</span></div></div>
 </main>

@@ -1,6 +1,6 @@
 <main class="pageMain">
   @if (product(); as item) {
-    <div class="shell breadcrumbs"><a routerLink="/">Home</a><span>/</span><a routerLink="/catalogo" [queryParams]="{ category: item.category }">{{ item.category }}</a><span>/</span><span>{{ item.name }}</span></div>
+    <div class="shell breadcrumbs"><a [routerLink]="i18n.route('home')">{{ i18n.t('nav.home') }}</a><span>/</span><a [routerLink]="i18n.route('catalog')" [queryParams]="{ category: item.category }">{{ i18n.category(item.category) }}</a><span>/</span><span>{{ item.name }}</span></div>
     <section class="shell productDetail">
       <div class="productGallery">
         <span class="badge">{{ item.badge }}</span>
@@ -11,7 +11,7 @@
         <h1>{{ item.name }}</h1>
         <div class="detailPrice"><strong>{{ formatCurrency(item.price) }}</strong>@if (item.oldPrice > item.price) { <del>{{ formatCurrency(item.oldPrice) }}</del> }</div>
         <p class="detailDescription">{{ item.description }}</p>
-        <div class="availability" [class.outOfStock]="item.stock === 0"><span></span>{{ item.stock === 0 ? 'Non disponibile' : (item.stock ? item.stock + ' pezzi disponibili' : 'Disponibile') }}</div>
+        <div class="availability" [class.outOfStock]="item.stock === 0"><span></span>{{ item.stock === 0 ? i18n.t('product.unavailable') : i18n.t('product.available') }}</div>
         @if (item.features.length) {
           <ul class="featureList">@for (feature of item.features; track feature) { <li><svg lucideCheck [size]="17"></svg>{{ feature }}</li> }</ul>
         }
@@ -19,25 +19,25 @@
           <div class="detailQuantity">
             <button type="button" aria-label="Riduci quantità" (click)="updateQuantity(-1)"><svg lucideMinus [size]="16"></svg></button><span>{{ quantity() }}</span><button type="button" aria-label="Aumenta quantità" (click)="updateQuantity(1)"><svg lucidePlus [size]="16"></svg></button>
           </div>
-          <button type="button" class="detailAdd" [disabled]="item.stock === 0" (click)="addToCart()"><svg lucideShoppingBag [size]="20"></svg>Aggiungi al carrello</button>
+          <button type="button" class="detailAdd" [disabled]="item.stock === 0" (click)="addToCart()"><svg lucideShoppingBag [size]="20"></svg>{{ i18n.t('product.add') }}</button>
           <button type="button" class="detailLike" [class.liked]="shop.isLiked(item.id)" aria-label="Aggiungi ai preferiti" (click)="shop.toggleWishlist(item)"><svg lucideHeart [size]="21" [attr.fill]="shop.isLiked(item.id) ? 'currentColor' : 'none'"></svg></button>
         </div>
-        <div class="detailBenefits"><div><svg lucideTruck [size]="22"></svg><span><strong>Consegna rapida</strong>In tutta Italia</span></div><div><svg lucideShieldCheck [size]="22"></svg><span><strong>Acquisto protetto</strong>Garanzia italiana</span></div></div>
+        <div class="detailBenefits"><div><svg lucideTruck [size]="22"></svg><span><strong>{{ i18n.t('product.fast') }}</strong>{{ i18n.t('product.fastText') }}</span></div><div><svg lucideShieldCheck [size]="22"></svg><span><strong>{{ i18n.t('product.protected') }}</strong>{{ i18n.t('product.protectedText') }}</span></div></div>
       </div>
     </section>
 
     @if (item.specifications | keyvalue; as specs) {
       @if (specs.length) {
-        <section class="shell specifications"><div><p class="eyebrow">Scheda prodotto</p><h2>Caratteristiche tecniche</h2></div><dl>@for (spec of specs; track spec.key) { <div><dt>{{ spec.key }}</dt><dd>{{ spec.value }}</dd></div> }</dl></section>
+        <section class="shell specifications"><div><p class="eyebrow">{{ i18n.t('product.sheet') }}</p><h2>{{ i18n.t('product.specs') }}</h2></div><dl>@for (spec of specs; track spec.key) { <div><dt>{{ spec.key }}</dt><dd>{{ spec.value }}</dd></div> }</dl></section>
       }
     }
 
     @if (related().length) {
-      <section class="shell productSection relatedSection"><div class="sectionHeading"><div><p class="eyebrow">Potrebbero piacerti</p><h2>Prodotti correlati</h2></div></div><div class="productGrid">@for (relatedProduct of related(); track relatedProduct.id) { <app-product-card [product]="relatedProduct" /> }</div></section>
+      <section class="shell productSection relatedSection"><div class="sectionHeading"><div><p class="eyebrow">Ekobit</p><h2>{{ i18n.t('product.related') }}</h2></div></div><div class="productGrid">@for (relatedProduct of related(); track relatedProduct.id) { <app-product-card [product]="relatedProduct" /> }</div></section>
     }
   } @else if (catalog.status() === 'loading') {
-    <section class="shell routeState"><div class="routeSpinner"></div><h1>Caricamento prodotto…</h1></section>
+    <section class="shell routeState"><div class="routeSpinner"></div><h1>{{ i18n.t('product.loading') }}</h1></section>
   } @else {
-    <section class="shell routeState"><h1>Prodotto non trovato</h1><p>Il prodotto potrebbe non essere più disponibile.</p><a class="primaryButton" routerLink="/catalogo">Torna al catalogo</a></section>
+    <section class="shell routeState"><h1>{{ i18n.t('product.notFound') }}</h1><a class="primaryButton" [routerLink]="i18n.route('catalog')">{{ i18n.t('product.back') }}</a></section>
   }
 </main>

@@ -1,0 +1,28 @@
+<main class="pageMain contactPage">
+  <section class="contactHero">
+    <div class="shell contactHeroGrid">
+      <div><p class="eyebrow">{{ copy()['kicker'] }}</p><h1>{{ copy()['title'] }}</h1><p>{{ copy()['lead'] }}</p></div>
+      <div class="contactOrbit" aria-hidden="true"><span>EKOBIT</span><i></i><b>EU</b></div>
+    </div>
+  </section>
+
+  <section class="shell contactCards">
+    <a [href]="'mailto:' + company.email"><svg lucideMail></svg><span>{{ copy()['email'] }}<strong>{{ company.email }}</strong></span><svg lucideArrowRight [size]="17"></svg></a>
+    <a [href]="'tel:' + company.phoneHref"><svg lucidePhone></svg><span>{{ copy()['phone'] }}<strong>{{ company.phone }}</strong></span><svg lucideArrowRight [size]="17"></svg></a>
+    <div><svg lucideMapPin></svg><span>{{ copy()['office'] }}<strong>{{ company.address }}</strong></span></div>
+    <div><svg lucideClock3></svg><span>{{ copy()['hours'] }}<strong>{{ copy()['hoursValue'] }}</strong></span></div>
+  </section>
+
+  <section class="shell mapSection">
+    <div class="mapCopy"><p class="eyebrow">Crotone · Calabria · Italia</p><h2>{{ copy()['mapTitle'] }}</h2><p>{{ company.address }}</p><a href="https://www.google.com/maps/dir/?api=1&destination=Via%20Firenze%20185%2C%2088900%20Crotone%20KR%2C%20Italia" target="_blank" rel="noopener"><svg lucideNavigation [size]="18"></svg>{{ copy()['directions'] }}</a></div>
+    <div class="mapFrame">
+      @if (consent.canLoadExternal()) {
+        <iframe [src]="mapUrl" [title]="copy()['mapTitle']" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      } @else {
+        <div class="mapConsent"><svg lucideShieldCheck [size]="30"></svg><p>{{ copy()['mapText'] }}</p><button type="button" (click)="consent.enableExternal()">{{ copy()['loadMap'] }}</button></div>
+      }
+    </div>
+  </section>
+
+  <section class="shell businessCard"><p>{{ copy()['business'] }}</p><strong>{{ company.legalName }}</strong><span>{{ company.address }}</span><span>VAT · {{ company.vatId }}</span><a [routerLink]="i18n.route('privacy')">{{ i18n.t('page.privacy') }} <svg lucideArrowRight [size]="15"></svg></a></section>
+</main>

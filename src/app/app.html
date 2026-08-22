@@ -1,25 +1,37 @@
 <app-shop-header />
 <router-outlet />
 
-<footer class="siteFooter">
-  <div class="shell footerGrid">
+<footer class="siteFooter europeFooter">
+  <div class="shell footerLead">
     <div class="footerBrand">
-      <img src="/brand/ekobit-logo.png" alt="Ekobit" width="150" height="97" />
-      <p>Tecnologia utile, scelta con cura e assistenza vera prima e dopo l’acquisto.</p>
+      <a [routerLink]="i18n.route('home')"><img src="/brand/ekobit-logo.png" alt="Ekobit" width="150" height="97" /></a>
+      <p>{{ i18n.t('footer.tagline') }}</p>
+      <span>EUROPE · EUR · {{ i18n.locale().toUpperCase() }}</span>
     </div>
-    <div>
-      <h2>Acquista</h2>
-      <a routerLink="/catalogo">Catalogo</a>
-      <a routerLink="/catalogo" [queryParams]="{ category: 'Lavaggio' }">Lavaggio</a>
-      <a routerLink="/catalogo" [queryParams]="{ category: 'Cottura' }">Cottura</a>
-      <a routerLink="/carrello">Carrello</a>
-    </div>
-    <div>
-      <h2>Ekobit</h2>
-      <a routerLink="/chi-siamo">Chi siamo</a>
-      <a routerLink="/assistenza">Assistenza</a>
-      <a href="mailto:info@ekobit.it">info@ekobit.it</a>
+    <div class="footerColumns">
+      <div>
+        <h2>{{ i18n.t('footer.shop') }}</h2>
+        <a [routerLink]="i18n.route('catalog')">{{ i18n.t('nav.shop') }}</a>
+        <a [routerLink]="i18n.route('catalog')" [queryParams]="{ sale: 'true' }">{{ i18n.t('nav.offers') }}</a>
+        <a [routerLink]="i18n.route('cart')">{{ i18n.t('nav.cart') }}</a>
+      </div>
+      <div>
+        <h2>{{ i18n.t('footer.company') }}</h2>
+        <a [routerLink]="i18n.route('about')">{{ i18n.t('page.about') }}</a>
+        <a [routerLink]="i18n.route('support')">{{ i18n.t('page.support') }}</a>
+        <a [routerLink]="i18n.route('contact')">{{ i18n.t('page.contact') }}</a>
+      </div>
+      <div>
+        <h2>{{ i18n.t('footer.legal') }}</h2>
+        <a [routerLink]="i18n.route('privacy')">{{ i18n.t('page.privacy') }}</a>
+        <a [routerLink]="i18n.route('cookies')">{{ i18n.t('page.cookies') }}</a>
+        <a [routerLink]="i18n.route('terms')">{{ i18n.t('page.terms') }}</a>
+        <a [routerLink]="i18n.route('shipping')">{{ i18n.t('page.shipping') }}</a>
+        <button type="button" (click)="consent.openSettings()">{{ i18n.t('footer.settings') }}</button>
+      </div>
     </div>
   </div>
-  <div class="shell footerBottom">© 2026 Ekobit. Tutti i diritti riservati.</div>
+  <div class="shell footerBottom"><span>© 2026 {{ company.legalName }} · {{ i18n.t('footer.rights') }}</span><span>{{ company.vatId }} · {{ company.address }}</span></div>
 </footer>
+
+<app-cookie-consent />
