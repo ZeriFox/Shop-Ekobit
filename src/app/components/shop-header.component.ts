@@ -4,8 +4,6 @@ import { FormsModule } from "@angular/forms";
 import { NavigationStart, Router, RouterLink, RouterLinkActive } from "@angular/router";
 import {
   LucideArrowRight,
-  LucideChevronDown,
-  LucideCircleUserRound,
   LucideHeadphones,
   LucideHeart,
   LucideMenu,
@@ -16,7 +14,8 @@ import {
   LucideTrash2,
   LucideX,
 } from "@lucide/angular";
-import { formatCurrency } from "../models/product";
+import { COMPANY } from "../config/company";
+import { I18nService, type Locale } from "../i18n/i18n.service";
 import { CatalogService } from "../services/catalog.service";
 import { ShopStateService } from "../services/shop-state.service";
 import { filter } from "rxjs";
@@ -28,8 +27,6 @@ import { filter } from "rxjs";
     RouterLink,
     RouterLinkActive,
     LucideArrowRight,
-    LucideChevronDown,
-    LucideCircleUserRound,
     LucideHeadphones,
     LucideHeart,
     LucideMenu,
@@ -47,15 +44,17 @@ export class ShopHeaderComponent {
   private readonly destroyRef = inject(DestroyRef);
   readonly catalog = inject(CatalogService);
   readonly shop = inject(ShopStateService);
+  readonly i18n = inject(I18nService);
+  readonly company = COMPANY;
   readonly query = signal("");
   readonly searchOpen = signal(false);
-  readonly formatCurrency = formatCurrency;
-  readonly normalizedQuery = computed(() => this.query().trim().toLocaleLowerCase("it"));
+  readonly formatCurrency = (value: number) => this.i18n.currency(value);
+  readonly normalizedQuery = computed(() => this.query().trim().toLocaleLowerCase(this.i18n.locale()));
   readonly searchMatches = computed(() => {
     const query = this.normalizedQuery();
     if (!query) return [];
     return this.catalog.products()
-      .filter((product) => `${product.brand} ${product.name} ${product.category}`.toLocaleLowerCase("it").includes(query))
+      .filter((product) => `${product.brand} ${product.name} ${product.category}`.toLocaleLowerCase(this.i18n.locale()).includes(query))
       .slice(0, 5);
   });
 
@@ -82,18 +81,22 @@ export class ShopHeaderComponent {
     const query = this.query().trim();
     if (!query) return;
     this.searchOpen.set(false);
-    void this.router.navigate(["/catalogo"], { queryParams: { q: query } });
+    void this.router.navigate([this.i18n.route("catalog")], { queryParams: { q: query } });
   }
 
   chooseProduct(productId: string): void {
     this.searchOpen.set(false);
     this.query.set("");
-    void this.router.navigate(["/prodotto", productId]);
+    void this.router.navigateByUrl(this.i18n.route("product", productId));
   }
 
   openCategory(category: string): void {
     this.shop.menuOpen.set(false);
-    void this.router.navigate(["/catalogo"], { queryParams: { category } });
+    void this.router.navigate([this.i18n.route("catalog")], { queryParams: { category } });
+  }
+
+  selectLanguage(value: string): void {
+    this.i18n.switchLanguage(value as Locale);
   }
 
   closeSearchIfOutside(event: FocusEvent): void {

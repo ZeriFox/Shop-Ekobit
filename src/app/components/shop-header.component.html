@@ -1,123 +1,88 @@
-<div class="topbar">
+<div class="topbar europeTopbar">
   <div class="shell">
-    <div class="livePill"><span></span> Catalogo collegato in tempo reale</div>
+    <div class="livePill"><span></span>{{ i18n.t('top.shipping') }}</div>
     <div class="topLinks">
-      <a routerLink="/assistenza">Assistenza</a>
-      <a routerLink="/assistenza" fragment="pagamenti">Pagamenti sicuri</a>
-      <a href="mailto:info@ekobit.it">Contatti</a>
+      <a [routerLink]="i18n.route('support')">{{ i18n.t('nav.support') }}</a>
+      <a [routerLink]="i18n.route('contact')">{{ i18n.t('nav.contact') }}</a>
+      <label class="languageSelect">
+        <span class="sr-only">Language</span>
+        <select [ngModel]="i18n.locale()" (ngModelChange)="selectLanguage($event)" aria-label="Language">
+          @for (language of i18n.languages; track language.code) { <option [value]="language.code">{{ language.short }} · {{ language.label }}</option> }
+        </select>
+      </label>
     </div>
   </div>
 </div>
 
-<header class="header">
+<header class="header europeHeader">
   <div class="shell headerMain">
-    <button class="mobileMenu" type="button" aria-label="Apri il menu" [attr.aria-expanded]="shop.menuOpen()" (click)="shop.menuOpen.set(true)">
-      <svg lucideMenu [size]="24"></svg>
-    </button>
+    <button class="mobileMenu" type="button" [attr.aria-label]="i18n.t('nav.categories')" [attr.aria-expanded]="shop.menuOpen()" (click)="shop.menuOpen.set(true)"><svg lucideMenu [size]="24"></svg></button>
+    <a class="logo" [routerLink]="i18n.route('home')" aria-label="Ekobit, homepage"><img src="/brand/ekobit-logo.png" alt="Ekobit" width="349" height="226" /></a>
 
-    <a class="logo" routerLink="/" aria-label="Ekobit, homepage">
-      <img src="/brand/ekobit-logo.png" alt="Ekobit" width="349" height="226" />
-    </a>
+    <nav class="mainNav desktopNav" aria-label="Main navigation">
+      <a [routerLink]="i18n.route('home')" routerLinkActive="navActive" [routerLinkActiveOptions]="{ exact: true }">{{ i18n.t('nav.home') }}</a>
+      <a [routerLink]="i18n.route('catalog')" routerLinkActive="navActive">{{ i18n.t('nav.shop') }}</a>
+      <a [routerLink]="i18n.route('catalog')" [queryParams]="{ sort: 'new' }">{{ i18n.t('nav.new') }}</a>
+      <a [routerLink]="i18n.route('catalog')" [queryParams]="{ sale: 'true' }">{{ i18n.t('nav.offers') }}</a>
+      <a [routerLink]="i18n.route('about')" routerLinkActive="navActive">{{ i18n.t('nav.about') }}</a>
+    </nav>
 
-    <div class="searchArea" (focusin)="searchOpen.set(true)" (focusout)="closeSearchIfOutside($event)">
-      <form class="search" role="search" (submit)="submitSearch($event)">
-        <label class="sr-only" for="site-search">Cerca nel catalogo</label>
-        <input id="site-search" type="search" placeholder="Cerca marca, prodotto o categoria..." autocomplete="off" [ngModel]="query()" (ngModelChange)="query.set($event)" name="search" />
-        <button type="submit" aria-label="Cerca"><svg lucideSearch [size]="21"></svg></button>
-      </form>
-
-      @if (searchOpen()) {
-        <div class="searchPanel">
-          @if (normalizedQuery()) {
-            @if (searchMatches().length) {
-              <p>Risultati rapidi</p>
-              @for (product of searchMatches(); track product.id) {
-                <button type="button" (click)="chooseProduct(product.id)">
-                  <span class="searchThumb"><img [src]="product.image" alt="" width="54" height="54" /></span>
-                  <span><small>{{ product.brand }}</small>{{ product.name }}</span>
-                  <strong>{{ formatCurrency(product.price) }}</strong>
-                </button>
-              }
-              <button class="searchAll" type="button" (click)="submitSearch($event)">Vedi tutti i risultati <svg lucideArrowRight [size]="16"></svg></button>
-            } @else {
-              <div class="noResults"><svg lucideSearch [size]="24"></svg>Nessun risultato per “{{ query() }}”</div>
-            }
-          } @else {
-            <div class="popularSearches">
-              <p>Ricerche popolari</p>
-              @for (term of ["Lavatrice", "Dyson", "Forno a vapore", "Frigorifero"]; track term) {
-                <button type="button" (click)="query.set(term)">{{ term }}</button>
-              }
-            </div>
-          }
-        </div>
-      }
-    </div>
-
-    <nav class="actions" aria-label="Azioni account">
-      <a routerLink="/assistenza" aria-label="Il mio account"><svg lucideCircleUserRound [size]="25"></svg><span>Account</span></a>
-      <button type="button" [attr.aria-label]="'Preferiti: ' + shop.wishlist().size" (click)="shop.showToast(shop.wishlist().size + ' prodotti nei preferiti')">
-        <svg lucideHeart [size]="25"></svg><span>Preferiti</span>
-        @if (shop.wishlist().size) { <b>{{ shop.wishlist().size }}</b> }
-      </button>
-      <button type="button" class="cart" [attr.aria-label]="'Carrello: ' + shop.cartCount() + ' prodotti'" (click)="shop.cartOpen.set(true)">
-        <svg lucideShoppingBag [size]="25"></svg><span>Carrello</span><b>{{ shop.cartCount() }}</b>
-      </button>
+    <nav class="actions" aria-label="Shop actions">
+      <button type="button" class="searchTrigger" aria-label="Search" (click)="searchOpen.set(!searchOpen())"><svg lucideSearch [size]="23"></svg><span>Search</span></button>
+      <button type="button" [attr.aria-label]="i18n.t('nav.wishlist') + ': ' + shop.wishlist().size" (click)="shop.showToast(shop.wishlist().size + ' · ' + i18n.t('nav.wishlist'))"><svg lucideHeart [size]="23"></svg><span>{{ i18n.t('nav.wishlist') }}</span>@if (shop.wishlist().size) { <b>{{ shop.wishlist().size }}</b> }</button>
+      <button type="button" class="cart" [attr.aria-label]="i18n.t('nav.cart') + ': ' + shop.cartCount()" (click)="shop.cartOpen.set(true)"><svg lucideShoppingBag [size]="23"></svg><span>{{ i18n.t('nav.cart') }}</span><b>{{ shop.cartCount() }}</b></button>
     </nav>
   </div>
 
-  <div class="navbar">
-    <div class="shell navInner">
-      <button class="categoryButton" type="button" (click)="shop.menuOpen.set(true)"><svg lucideMenu [size]="19"></svg>Tutte le categorie<svg lucideChevronDown [size]="16"></svg></button>
-      <nav class="mainNav" aria-label="Navigazione principale">
-        <a routerLink="/" routerLinkActive="navActive" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-        <a routerLink="/catalogo" routerLinkActive="navActive">Negozio</a>
-        <a routerLink="/catalogo" [queryParams]="{ sort: 'new' }">Nuovi arrivi</a>
-        <a routerLink="/catalogo" [queryParams]="{ sale: 'true' }">Offerte</a>
-        <a routerLink="/chi-siamo" routerLinkActive="navActive">Chi siamo</a>
-      </nav>
-      <a class="phone" routerLink="/assistenza"><svg lucideHeadphones [size]="21"></svg><span>Hai bisogno di aiuto?<strong>Parla con noi</strong></span></a>
+  @if (searchOpen()) {
+    <div class="searchDock" (focusout)="closeSearchIfOutside($event)">
+      <div class="shell searchArea">
+        <form class="search" role="search" (submit)="submitSearch($event)">
+          <label class="sr-only" for="site-search">Search</label>
+          <input id="site-search" type="search" [placeholder]="i18n.t('search.placeholder')" autocomplete="off" [ngModel]="query()" (ngModelChange)="query.set($event)" name="search" autofocus />
+          <button type="submit" aria-label="Search"><svg lucideSearch [size]="21"></svg></button>
+        </form>
+        <button type="button" class="searchClose" aria-label="Close" (click)="searchOpen.set(false)"><svg lucideX [size]="21"></svg></button>
+        <div class="searchPanel searchPanelDocked">
+          @if (normalizedQuery()) {
+            @if (searchMatches().length) {
+              <p>{{ i18n.t('search.quick') }}</p>
+              @for (product of searchMatches(); track product.id) {
+                <button type="button" (click)="chooseProduct(product.id)"><span class="searchThumb"><img [src]="product.image" alt="" width="54" height="54" /></span><span><small>{{ product.brand }}</small>{{ product.name }}</span><strong>{{ formatCurrency(product.price) }}</strong></button>
+              }
+              <button class="searchAll" type="button" (click)="submitSearch($event)">{{ i18n.t('search.all') }} <svg lucideArrowRight [size]="16"></svg></button>
+            } @else { <div class="noResults"><svg lucideSearch [size]="24"></svg>{{ i18n.t('search.none') }} “{{ query() }}”</div> }
+          } @else {
+            <div class="popularSearches"><p>{{ i18n.t('search.popular') }}</p>@for (term of ['Dyson', 'Lavatrice', 'Forno', 'Frigorifero']; track term) { <button type="button" (click)="query.set(term)">{{ term }}</button> }</div>
+          }
+        </div>
+      </div>
     </div>
-  </div>
+  }
 </header>
 
 <div class="scrim" [class.scrimVisible]="shop.overlayOpen()" (click)="shop.closeOverlays()"></div>
 
-<aside class="cartDrawer" [class.drawerOpen]="shop.cartOpen()" role="dialog" aria-modal="true" aria-label="Carrello" [attr.aria-hidden]="!shop.cartOpen()">
-  <div class="drawerHeader">
-    <div><p>Il tuo carrello</p><span>{{ shop.cartCount() }} articoli</span></div>
-    <button type="button" aria-label="Chiudi carrello" (click)="shop.cartOpen.set(false)"><svg lucideX></svg></button>
-  </div>
+<aside class="cartDrawer" [class.drawerOpen]="shop.cartOpen()" role="dialog" aria-modal="true" [attr.aria-label]="i18n.t('cart.title')" [attr.aria-hidden]="!shop.cartOpen()">
+  <div class="drawerHeader"><div><p>{{ i18n.t('cart.title') }}</p><span>{{ shop.cartCount() }} {{ i18n.t('cart.items') }}</span></div><button type="button" aria-label="Close" (click)="shop.cartOpen.set(false)"><svg lucideX></svg></button></div>
   <div class="cartLines">
     @if (shop.cartItems().length) {
       @for (line of shop.cartItems(); track line.product.id) {
-        <article>
-          <a class="cartImage" [routerLink]="['/prodotto', line.product.id]" (click)="shop.cartOpen.set(false)"><img [src]="line.product.image" alt="" width="84" height="96" /></a>
-          <div><small>{{ line.product.brand }}</small><h3>{{ line.product.name }}</h3><strong>{{ formatCurrency(line.product.price) }}</strong>
-            <div class="quantity">
-              <button type="button" aria-label="Riduci quantità" (click)="shop.updateQuantity(line.product.id, -1)">@if (line.quantity === 1) { <svg lucideTrash2 [size]="14"></svg> } @else { <svg lucideMinus [size]="14"></svg> }</button>
-              <span>{{ line.quantity }}</span>
-              <button type="button" aria-label="Aumenta quantità" (click)="shop.updateQuantity(line.product.id, 1)"><svg lucidePlus [size]="14"></svg></button>
-            </div>
-          </div>
-        </article>
+        <article><a class="cartImage" [routerLink]="i18n.route('product', line.product.id)" (click)="shop.cartOpen.set(false)"><img [src]="line.product.image" alt="" width="84" height="96" /></a><div><small>{{ line.product.brand }}</small><h3>{{ line.product.name }}</h3><strong>{{ formatCurrency(line.product.price) }}</strong><div class="quantity"><button type="button" aria-label="Minus" (click)="shop.updateQuantity(line.product.id, -1)">@if (line.quantity === 1) { <svg lucideTrash2 [size]="14"></svg> } @else { <svg lucideMinus [size]="14"></svg> }</button><span>{{ line.quantity }}</span><button type="button" aria-label="Plus" (click)="shop.updateQuantity(line.product.id, 1)"><svg lucidePlus [size]="14"></svg></button></div></div></article>
       }
     } @else {
-      <div class="emptyCart"><span><svg lucideShoppingBag [size]="30"></svg></span><h3>Il carrello è pronto</h3><p>Aggiungi un prodotto e lo vedrai comparire qui anche cambiando pagina.</p><a routerLink="/catalogo" (click)="shop.cartOpen.set(false)">Inizia lo shopping</a></div>
+      <div class="emptyCart"><span><svg lucideShoppingBag [size]="30"></svg></span><h3>{{ i18n.t('cart.emptyTitle') }}</h3><p>{{ i18n.t('cart.emptyText') }}</p><a [routerLink]="i18n.route('catalog')" (click)="shop.cartOpen.set(false)">{{ i18n.t('cart.start') }}</a></div>
     }
   </div>
-  @if (shop.cartItems().length) {
-    <div class="cartFooter"><div><span>Totale</span><strong>{{ formatCurrency(shop.cartTotal()) }}</strong></div><a routerLink="/carrello" (click)="shop.cartOpen.set(false)">Vai al carrello <svg lucideArrowRight [size]="18"></svg></a><p>Spedizione calcolata al checkout</p></div>
-  }
+  @if (shop.cartItems().length) { <div class="cartFooter"><div><span>{{ i18n.t('cart.total') }}</span><strong>{{ formatCurrency(shop.cartTotal()) }}</strong></div><a [routerLink]="i18n.route('cart')" (click)="shop.cartOpen.set(false)">{{ i18n.t('cart.open') }} <svg lucideArrowRight [size]="18"></svg></a><p>{{ i18n.t('cart.shipping') }}</p></div> }
 </aside>
 
-<aside class="mobilePanel" [class.mobilePanelOpen]="shop.menuOpen()" role="dialog" aria-modal="true" aria-label="Menu categorie" [attr.aria-hidden]="!shop.menuOpen()">
-  <div class="drawerHeader"><img src="/brand/ekobit-logo.png" alt="Ekobit" width="118" height="76" /><button type="button" aria-label="Chiudi menu" (click)="shop.menuOpen.set(false)"><svg lucideX></svg></button></div>
-  <p class="menuLabel">Esplora Ekobit</p>
-  @for (category of catalog.categories().slice(1); track category) {
-    <button type="button" (click)="openCategory(category)"><span>{{ category }}</span><svg lucideArrowRight [size]="17"></svg></button>
-  }
-  <a routerLink="/assistenza" class="menuContact" (click)="shop.menuOpen.set(false)"><svg lucideHeadphones [size]="21"></svg><span>Serve un consiglio?<strong>Scrivici ora</strong></span></a>
+<aside class="mobilePanel" [class.mobilePanelOpen]="shop.menuOpen()" role="dialog" aria-modal="true" [attr.aria-label]="i18n.t('nav.categories')" [attr.aria-hidden]="!shop.menuOpen()">
+  <div class="drawerHeader"><img src="/brand/ekobit-logo.png" alt="Ekobit" width="118" height="76" /><button type="button" aria-label="Close" (click)="shop.menuOpen.set(false)"><svg lucideX></svg></button></div>
+  <p class="menuLabel">{{ i18n.t('nav.categories') }}</p>
+  @for (category of catalog.categories().slice(1); track category) { <button type="button" (click)="openCategory(category)"><span>{{ i18n.category(category) }}</span><svg lucideArrowRight [size]="17"></svg></button> }
+  <div class="mobileMenuLinks"><a [routerLink]="i18n.route('about')">{{ i18n.t('nav.about') }}</a><a [routerLink]="i18n.route('contact')">{{ i18n.t('nav.contact') }}</a><a [routerLink]="i18n.route('support')">{{ i18n.t('nav.support') }}</a></div>
+  <a [routerLink]="i18n.route('contact')" class="menuContact" (click)="shop.menuOpen.set(false)"><svg lucideHeadphones [size]="21"></svg><span>{{ i18n.t('nav.help') }}<strong>{{ i18n.t('nav.talk') }}</strong></span></a>
 </aside>
 
 <div class="toast" [class.toastVisible]="shop.toast()" aria-live="polite">{{ shop.toast() }}</div>

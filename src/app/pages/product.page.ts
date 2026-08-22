@@ -5,7 +5,7 @@ import { Title } from "@angular/platform-browser";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { LucideCheck, LucideHeart, LucideMinus, LucidePlus, LucideShieldCheck, LucideShoppingBag, LucideTruck } from "@lucide/angular";
 import { ProductCardComponent } from "../components/product-card.component";
-import { formatCurrency } from "../models/product";
+import { I18nService } from "../i18n/i18n.service";
 import { CatalogService } from "../services/catalog.service";
 import { ShopStateService } from "../services/shop-state.service";
 
@@ -19,6 +19,7 @@ export class ProductPage {
   private readonly title = inject(Title);
   readonly catalog = inject(CatalogService);
   readonly shop = inject(ShopStateService);
+  readonly i18n = inject(I18nService);
   readonly productId = signal<string | null>(null);
   readonly quantity = signal(1);
   readonly product = computed(() => this.catalog.findById(this.productId()));
@@ -28,7 +29,7 @@ export class ProductPage {
       ? this.catalog.products().filter((item) => item.category === product.category && item.id !== product.id).slice(0, 5)
       : [];
   });
-  readonly formatCurrency = formatCurrency;
+  readonly formatCurrency = (value: number) => this.i18n.currency(value);
 
   constructor() {
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {

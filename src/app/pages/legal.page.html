@@ -1,0 +1,27 @@
+<main class="pageMain legalPage">
+  <section class="legalHero">
+    <div class="shell legalHeroInner">
+      <div>
+        <p class="eyebrow">Ekobit Europe</p>
+        <h1>{{ title() }}</h1>
+        <p>{{ copy().intro }}</p>
+      </div>
+      <div class="legalStamp"><svg lucideFileCheck2 [size]="28"></svg><span>Last update<strong>22.08.2026</strong></span></div>
+    </div>
+  </section>
+  <section class="shell legalLayout">
+    <aside class="legalIndex">
+      <a [routerLink]="i18n.route('privacy')" [class.active]="document === 'privacy'">{{ i18n.t('page.privacy') }}</a>
+      <a [routerLink]="i18n.route('cookies')" [class.active]="document === 'cookies'">{{ i18n.t('page.cookies') }}</a>
+      <a [routerLink]="i18n.route('terms')" [class.active]="document === 'terms'">{{ i18n.t('page.terms') }}</a>
+      <a [routerLink]="i18n.route('shipping')" [class.active]="document === 'shipping'">{{ i18n.t('page.shipping') }}</a>
+    </aside>
+    <article class="legalContent">
+      <div class="legalDraft"><svg lucideInfo [size]="18"></svg>{{ i18n.t('common.draft') }}</div>
+      @for (section of copy().sections; track section.title; let index = $index) {
+        <section><span>0{{ index + 1 }}</span><div><h2>{{ section.title }}</h2><p>{{ section.body }}</p></div></section>
+      }
+      <div class="legalContact"><svg lucideMail [size]="22"></svg><div><strong>{{ company.email }}</strong><span>{{ company.legalName }} · {{ company.address }}</span></div><a [href]="'mailto:' + company.email">Email <svg lucideArrowRight [size]="16"></svg></a></div>
+    </article>
+  </section>
+</main>

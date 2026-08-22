@@ -1,9 +1,9 @@
 <main class="pageMain">
   <section class="catalogHero">
     <div class="shell">
-      <p class="eyebrow">Catalogo Ekobit</p>
-      <h1>{{ query() ? 'Risultati per “' + query() + '”' : (category() === 'Tutti' ? 'Tutti i prodotti' : category()) }}</h1>
-      <p>Prodotti selezionati, disponibilità aggiornata e assistenza prima e dopo l’acquisto.</p>
+      <p class="eyebrow">{{ i18n.t('catalog.kicker') }}</p>
+      <h1>{{ query() ? '“' + query() + '”' : (category() === 'Tutti' ? i18n.t('catalog.all') : i18n.category(category())) }}</h1>
+      <p>{{ i18n.t('catalog.lead') }}</p>
     </div>
   </section>
 
@@ -13,33 +13,33 @@
         @for (item of catalog.categories(); track item) {
           <button type="button" [class.filterActive]="category() === item" (click)="setCategory(item)">
             @if (category() === item) { <svg lucideCheck [size]="15"></svg> }
-            {{ item }}
+            {{ i18n.category(item) }}
           </button>
         }
       </div>
-      <label class="sortControl">Ordina
+      <label class="sortControl">{{ i18n.t('catalog.sort') }}
         <select [ngModel]="sort()" (ngModelChange)="setSort($event)">
-          <option value="featured">In evidenza</option>
-          <option value="price-asc">Prezzo crescente</option>
-          <option value="price-desc">Prezzo decrescente</option>
-          <option value="name">Nome</option>
+          <option value="featured">{{ i18n.t('catalog.featured') }}</option>
+          <option value="price-asc">{{ i18n.t('catalog.priceAsc') }}</option>
+          <option value="price-desc">{{ i18n.t('catalog.priceDesc') }}</option>
+          <option value="name">{{ i18n.t('catalog.name') }}</option>
         </select>
       </label>
     </div>
 
     @if (catalog.status() === 'loading') {
-      <div class="catalogNotice"><svg lucideRefreshCw [size]="18"></svg> Stiamo aggiornando il catalogo…</div>
-    } @else if (catalog.status() === 'fallback') {
-      <div class="catalogNotice catalogNoticeMuted">Catalogo demo attivo: la connessione verrà aggiornata automaticamente al prossimo caricamento.</div>
+      <div class="catalogNotice"><svg lucideRefreshCw [size]="18"></svg>{{ i18n.t('catalog.updating') }}</div>
+    } @else if (catalog.status() === 'fallback' || catalog.status() === 'demo') {
+      <div class="catalogNotice catalogNoticeMuted">{{ i18n.t('catalog.demo') }}</div>
     }
 
-    <div class="catalogSummary"><strong>{{ products().length }}</strong> prodotti trovati</div>
+    <div class="catalogSummary"><strong>{{ products().length }}</strong> {{ i18n.t('catalog.found') }}</div>
     @if (products().length) {
       <div class="productGrid catalogProductGrid">
         @for (product of products(); track product.id) { <app-product-card [product]="product" /> }
       </div>
     } @else {
-      <div class="emptyResults"><span><svg lucideSearch [size]="32"></svg></span><h2>Nessun prodotto trovato</h2><p>Prova a cambiare categoria o a usare una ricerca più semplice.</p><button type="button" (click)="clearFilters()">Azzera i filtri</button></div>
+      <div class="emptyResults"><span><svg lucideSearch [size]="32"></svg></span><h2>{{ i18n.t('catalog.empty') }}</h2><p>{{ i18n.t('catalog.emptyText') }}</p><button type="button" (click)="clearFilters()">{{ i18n.t('catalog.reset') }}</button></div>
     }
   </section>
 </main>

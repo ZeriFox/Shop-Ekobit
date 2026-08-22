@@ -30,7 +30,8 @@ progetto. `FIREBASE_DATABASE_ID` è opzionale e usa `shop` come valore
 predefinito. Per i Preview Deployment è preferibile un progetto Firebase
 separato da quello di produzione.
 
-La collection Firestore attesa è `products`. Ogni documento usa il proprio ID e
+La collection Firestore attesa è `products` nel database Enterprise nominato
+`shop`. Ogni documento usa il proprio ID e
 può contenere questi campi:
 
 | Campo | Tipo | Obbligatorio |
@@ -52,16 +53,31 @@ può contenere questi campi:
 
 La Function `GET /api/products` in `api/products.js` legge fino a 100 documenti
 attivi, valida i campi e restituisce il catalogo con una breve cache CDN. Se la
-Function non è raggiungibile durante lo sviluppo con `ng serve`, Angular usa il
-catalogo demo incluso. Per provare frontend e Function insieme usa `vercel dev`.
+collection è vuota o la Function non è raggiungibile durante lo sviluppo con
+`ng serve`, Angular usa i cinque prodotti demo localizzati inclusi. Per provare
+frontend e Function insieme usa `vercel dev`.
 
-## Routing
+## Lingue e routing
 
-- `/` — homepage
-- `/catalogo` — catalogo con ricerca, categoria, offerte e ordinamento
-- `/prodotto/:id` — pagina prodotto dinamica
-- `/carrello` — carrello persistente
-- `/chi-siamo` e `/assistenza` — pagine informative
+Lo storefront supporta italiano, inglese, francese, tedesco e spagnolo tramite
+URL localizzati. La root reindirizza a `/it`; esempi:
+
+- `/it/catalogo`, `/en/catalog`, `/fr/catalogue`, `/de/katalog`, `/es/catalogo`
+- `/it/prodotto/:id`, `/en/product/:id`, `/de/produkt/:id`
+- pagine localizzate per carrello, chi siamo, assistenza e contatti
+- privacy, cookie, termini e condizioni, spedizioni e resi in ogni lingua
+
+Il cambio lingua conserva pagina, prodotto e parametri di ricerca. Titolo,
+descrizione, canonical e attributo `lang` vengono aggiornati durante la
+navigazione.
+
+## Privacy e contenuti esterni
+
+Il pannello consensi salva nel browser preferenze separate per strumenti
+analitici, marketing e contenuti esterni. Google Maps nella pagina contatti non
+viene caricato prima del consenso. Le bozze legali descrivono l'implementazione
+attuale, ma devono essere validate e completate da un consulente prima del
+lancio commerciale.
 
 Le pagine sono caricate in lazy loading e condividono una sola istanza del
 catalogo, del carrello e dei preferiti.
